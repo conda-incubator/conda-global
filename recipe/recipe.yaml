@@ -18,6 +18,8 @@ outputs:
       version: ${{ version }}
     build:
       number: 0
+      python:
+        version_independent: true
       script:
         env:
           CARGO_PROFILE_RELEASE_STRIP: symbols
@@ -48,10 +50,9 @@ outputs:
           imports:
             - conda_trampoline
           pip_check: false
-          python_version: ${{ python_min }}.*
       - package_contents:
-          bin:
-            - _cg_trampoline
+          files:
+            - python-scripts/_cg_trampoline*
 
   - package:
       name: conda-global
