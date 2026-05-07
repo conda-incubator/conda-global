@@ -18,6 +18,8 @@ outputs:
       version: ${{ version }}
     build:
       number: 0
+      python:
+        version_independent: true
       script:
         env:
           CARGO_PROFILE_RELEASE_STRIP: symbols
@@ -30,8 +32,13 @@ outputs:
               - ${{ PYTHON }} -m pip install packages\conda-trampoline -vv --no-deps --no-build-isolation
     requirements:
       build:
+        - maturin >=1.0,<2.0
         - ${{ compiler('rust') }}
         - ${{ stdlib('c') }}
+        - if: build_platform != target_platform
+          then:
+            - python ${{ python_min }}.*
+            - cross-python_${{ target_platform }}
       host:
         - python ${{ python_min }}.*
         - pip
@@ -43,10 +50,9 @@ outputs:
           imports:
             - conda_trampoline
           pip_check: false
-          python_version: ${{ python_min }}.*
       - package_contents:
-          bin:
-            - _cg_trampoline
+          files:
+            - python-scripts/_cg_trampoline*
 
   - package:
       name: conda-global
@@ -62,6 +68,11 @@ outputs:
         entry_points:
           - cg = conda_global.__main__:main
     requirements:
+      build:
+        - if: build_platform != target_platform
+          then:
+            - python ${{ python_min }}.*
+            - cross-python_${{ target_platform }}
       host:
         - python ${{ python_min }}.*
         - pip

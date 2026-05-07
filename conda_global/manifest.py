@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 import tomlkit
 
-from .models import ToolEnv
+from .models import ToolEnv, validate_name
 from .paths import manifest_path as _default_manifest_path
 
 if TYPE_CHECKING:
@@ -43,6 +43,9 @@ class Manifest:
 
         result: dict[str, ToolEnv] = {}
         for name, data in envs_table.items():
+            validate_name(name, kind="environment")
+            for exposed_name in data.get("exposed", {}):
+                validate_name(exposed_name, kind="exposed binary")
             result[name] = ToolEnv(
                 name=name,
                 channels=list(data.get("channels", ["conda-forge"])),

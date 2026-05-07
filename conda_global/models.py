@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -9,6 +10,22 @@ from conda.base.constants import on_win
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+SAFE_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+
+def validate_name(name: str, *, kind: str = "environment") -> None:
+    """Reject names that could escape their intended directory.
+
+    Raises ``ValueError`` for names containing path separators, ``..``,
+    null bytes, or other unsafe characters.
+    """
+    if not name or not SAFE_NAME_RE.match(name) or ".." in name:
+        raise ValueError(
+            f"Invalid {kind} name: {name!r}. "
+            f"Names must start with an alphanumeric character and contain "
+            f"only letters, digits, dots, hyphens, and underscores."
+        )
 
 
 @dataclass
@@ -29,6 +46,9 @@ class ToolEnv:
     dependencies: dict[str, str] = field(default_factory=dict)
     exposed: dict[str, str] = field(default_factory=dict)
     pinned: bool = False
+
+    def __post_init__(self) -> None:
+        validate_name(self.name, kind="environment")
 
     @property
     def specs(self) -> list[str]:

@@ -12,7 +12,7 @@ from ..binaries import discover_binaries, find_binary
 from ..envs import EnvironmentManager
 from ..exceptions import BinaryNotFoundError, ToolExistsError
 from ..manifest import Manifest
-from ..models import ToolEnv
+from ..models import ToolEnv, validate_name
 from ..paths import global_bin_dir
 from . import status
 
@@ -57,6 +57,8 @@ def execute_install(
                 exposed_name, binary_name = mapping.split("=", 1)
             else:
                 exposed_name = binary_name = mapping
+            validate_name(exposed_name, kind="exposed binary")
+            validate_name(binary_name, kind="binary")
             expose_mappings[exposed_name] = binary_name
     else:
         available = discover_binaries(prefix)

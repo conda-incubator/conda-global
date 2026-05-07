@@ -155,3 +155,10 @@ def test_tools_sorted_in_output(tmp_path):
     )
     content = manifest.path.read_text()
     assert content.index("bat") < content.index("gh") < content.index("zoxide")
+
+
+def test_load_rejects_traversal_name(tmp_path):
+    path = tmp_path / "global.toml"
+    path.write_text('[envs."../evil"]\ndependencies = {evil = "*"}\n')
+    with pytest.raises(ValueError, match="Invalid environment name"):
+        Manifest(path).load()
