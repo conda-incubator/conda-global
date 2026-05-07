@@ -17,13 +17,13 @@ def data_dir() -> Path:
     env = os.environ.get("CONDA_GLOBAL_HOME")
     if env:
         return Path(env).expanduser().resolve()
-    legacy = _legacy_data_dir()
+    legacy = legacy_data_dir()
     if legacy.is_dir():
         return legacy
     return Path.home() / ".conda" / "global"
 
 
-def _legacy_data_dir() -> Path:
+def legacy_data_dir() -> Path:
     """Return the old default data directory (~/.cg/)."""
     return Path.home() / ".cg"
 

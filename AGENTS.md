@@ -72,6 +72,14 @@
 
 - Shared fixtures belong in `conftest.py` at the appropriate level.
 
+## Code structure
+
+- Avoid private module-level helper functions (`_foo()`). If a helper
+  is called once, inline it at the call site. If it is genuinely
+  reused or tested independently, make it a public function with a
+  clear name and docstring. The underscore-prefix convention creates
+  untestable, hard-to-patch indirection without real encapsulation.
+
 ## Conda integration
 
 - Use `-e`/`--environment` for environment targeting, consistent with

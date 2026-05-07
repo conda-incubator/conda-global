@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from conda_global.migrate import (
     MigrationStatus,
-    _find_legacy_manifest,
+    find_legacy_manifest,
     migrate_data_dir,
     remove_legacy_dir,
 )
@@ -14,15 +16,14 @@ from conda_global.migrate import (
 
 @pytest.fixture
 def fake_home(tmp_path, monkeypatch):
-    """Redirect _legacy_data_dir, _new_data_dir, and _new_manifest_path."""
+    """Redirect Path.home() and legacy_data_dir to tmp_path-based dirs."""
     home = tmp_path / "home"
     home.mkdir()
     legacy = home / ".cg"
     new = home / ".conda" / "global"
     manifest = home / ".conda" / "global.toml"
-    monkeypatch.setattr("conda_global.migrate._legacy_data_dir", lambda: legacy)
-    monkeypatch.setattr("conda_global.migrate._new_data_dir", lambda: new)
-    monkeypatch.setattr("conda_global.migrate._new_manifest_path", lambda: manifest)
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
+    monkeypatch.setattr("conda_global.migrate.legacy_data_dir", lambda: legacy)
     return {"home": home, "legacy": legacy, "new": new, "manifest": manifest}
 
 
@@ -78,14 +79,14 @@ def test_find_legacy_manifest(tmp_path, monkeypatch, filename):
     legacy = tmp_path / ".cg"
     legacy.mkdir()
     (legacy / filename).write_text("[envs]")
-    monkeypatch.setattr("conda_global.migrate._legacy_data_dir", lambda: legacy)
+    monkeypatch.setattr("conda_global.migrate.legacy_data_dir", lambda: legacy)
 
-    assert _find_legacy_manifest() == legacy / filename
+    assert find_legacy_manifest() == legacy / filename
 
 
 def test_find_legacy_manifest_missing(tmp_path, monkeypatch):
-    monkeypatch.setattr("conda_global.migrate._legacy_data_dir", lambda: tmp_path / "nope")
-    assert _find_legacy_manifest() is None
+    monkeypatch.setattr("conda_global.migrate.legacy_data_dir", lambda: tmp_path / "nope")
+    assert find_legacy_manifest() is None
 
 
 def test_remove_legacy_dir(tmp_path, monkeypatch):
@@ -93,12 +94,12 @@ def test_remove_legacy_dir(tmp_path, monkeypatch):
     legacy.mkdir()
     (legacy / "envs").mkdir()
     (legacy / "envs" / "gh").mkdir()
-    monkeypatch.setattr("conda_global.migrate._legacy_data_dir", lambda: legacy)
+    monkeypatch.setattr("conda_global.migrate.legacy_data_dir", lambda: legacy)
 
     remove_legacy_dir()
     assert not legacy.exists()
 
 
 def test_remove_legacy_dir_noop_when_missing(tmp_path, monkeypatch):
-    monkeypatch.setattr("conda_global.migrate._legacy_data_dir", lambda: tmp_path / "nope")
+    monkeypatch.setattr("conda_global.migrate.legacy_data_dir", lambda: tmp_path / "nope")
     remove_legacy_dir()

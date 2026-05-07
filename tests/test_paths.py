@@ -82,4 +82,4 @@ def test_data_dir_env_var_empty_falls_through(monkeypatch, tmp_path):
 
 
 def test_legacy_data_dir():
-    assert paths._legacy_data_dir() == Path.home() / ".cg"
+    assert paths.legacy_data_dir() == Path.home() / ".cg"
