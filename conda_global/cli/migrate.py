@@ -6,6 +6,10 @@ from typing import TYPE_CHECKING
 
 from rich.console import Console
 
+from ..migrate import MigrationStatus, migrate_data_dir, remove_legacy_dir
+from ..paths import data_dir, legacy_data_dir
+from .sync import execute_sync
+
 if TYPE_CHECKING:
     import argparse
 
@@ -18,9 +22,6 @@ def execute_migrate(args: argparse.Namespace, *, console: Console | None = None)
     """
     if console is None:
         console = Console(stderr=True, highlight=False)
-
-    from ..migrate import MigrationStatus, migrate_data_dir, remove_legacy_dir
-    from ..paths import legacy_data_dir
 
     legacy = legacy_data_dir()
     force = getattr(args, "force", False)
@@ -38,13 +39,9 @@ def execute_migrate(args: argparse.Namespace, *, console: Console | None = None)
         )
         return 1
 
-    from ..paths import data_dir
-
     new = data_dir()
     console.print(f"[bold cyan]Migrating[/bold cyan] [bold]{legacy}[/bold] → [bold]{new}[/bold]")
     console.print()
-
-    from .sync import execute_sync
 
     console.print("[bold]Reinstalling tools in new location...[/bold]")
     sync_result = execute_sync(args, console=console)
