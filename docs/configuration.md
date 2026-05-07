@@ -1,5 +1,28 @@
 # Configuration
 
+:::{note}
+All paths in this documentation use `~/` to denote your home directory.
+:::
+
+:::::{tab-set}
+
+::::{tab-item} macOS / Linux
+```
+~/           →  /home/<user>/  or  /Users/<user>/
+~/.conda/    →  /home/<user>/.conda/
+```
+::::
+
+::::{tab-item} Windows
+```
+~/           →  C:\Users\<user>\
+~/.conda/    →  C:\Users\<user>\.conda\
+```
+On Windows, `~` is `%USERPROFILE%`. You can verify with `echo %USERPROFILE%` in a terminal.
+::::
+
+:::::
+
 ## Manifest
 
 The manifest at `~/.conda/global.toml` is the source of truth for
@@ -70,8 +93,7 @@ exposed = { "python3.14" = "python3.14", pip = "pip3.14" }
             └── conda-meta/
 ```
 
-On Windows, `~/.conda/global` is `%USERPROFILE%\.conda\global` and
-`bin/` uses platform-appropriate extensions (`.exe`).
+On Windows, `bin/` uses platform-appropriate extensions (`.exe`).
 
 ### Paths
 
