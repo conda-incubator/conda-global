@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
+from functools import lru_cache
 from pathlib import Path
 
 
+@lru_cache(maxsize=1)
 def data_dir() -> Path:
     """Return the base data directory for conda-global.
 
@@ -48,6 +50,7 @@ def trampoline_master_path() -> Path:
     return trampoline_config_dir() / "_cg_trampoline"
 
 
+@lru_cache(maxsize=1)
 def manifest_path() -> Path:
     """Return the path to the global manifest.
 

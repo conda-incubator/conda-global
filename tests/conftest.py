@@ -27,6 +27,11 @@ def mock_conda_home(tmp_path, monkeypatch):
     ``TrampolineManager()`` with default paths, so we patch the path
     functions they fall back to.
     """
+    from conda_global.paths import data_dir, manifest_path
+
+    data_dir.cache_clear()
+    manifest_path.cache_clear()
+
     data = tmp_path / "conda-global"
     data.mkdir()
     manifest = data / "manifest.toml"

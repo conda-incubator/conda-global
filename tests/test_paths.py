@@ -9,6 +9,16 @@ import pytest
 from conda_global import paths
 
 
+@pytest.fixture(autouse=True)
+def _clear_path_caches():
+    """Clear lru_cache on path helpers between tests."""
+    paths.data_dir.cache_clear()
+    paths.manifest_path.cache_clear()
+    yield
+    paths.data_dir.cache_clear()
+    paths.manifest_path.cache_clear()
+
+
 @pytest.mark.parametrize(
     "func,expected_suffix",
     [
