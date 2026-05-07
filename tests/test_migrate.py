@@ -100,6 +100,29 @@ def test_remove_legacy_dir(tmp_path, monkeypatch):
     assert not legacy.exists()
 
 
-def test_remove_legacy_dir_noop_when_missing(tmp_path, monkeypatch):
-    monkeypatch.setattr("conda_global.migrate.legacy_data_dir", lambda: tmp_path / "nope")
-    remove_legacy_dir()
+def test_find_legacy_manifest_empty_legacy_dir(tmp_path, monkeypatch):
+    legacy = tmp_path / ".cg"
+    legacy.mkdir()
+    monkeypatch.setattr("conda_global.migrate.legacy_data_dir", lambda: legacy)
+    assert find_legacy_manifest() is None
+
+
+def test_migrate_data_dir_force_when_both_dirs_exist(fake_home):
+    legacy = fake_home["legacy"]
+    new = fake_home["new"]
+    legacy.mkdir(parents=True)
+    new.mkdir(parents=True)
+    (legacy / "global.toml").write_text("[envs.legacy]\n")
+
+    result = migrate_data_dir(force=True)
+    assert result == MigrationStatus.MIGRATED
+    assert fake_home["manifest"].read_text() == "[envs.legacy]\n"
+
+
+def test_migrate_data_dir_legacy_without_manifest_still_migrates(fake_home):
+    """Legacy ~/.cg exists but has no manifest file — still create target layout."""
+    legacy = fake_home["legacy"]
+    legacy.mkdir(parents=True)
+    result = migrate_data_dir()
+    assert result == MigrationStatus.MIGRATED
+    assert fake_home["new"].is_dir()

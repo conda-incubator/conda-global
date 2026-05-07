@@ -43,7 +43,22 @@ def test_manifest_path_default(monkeypatch, tmp_path):
     assert paths.manifest_path() == home / ".conda" / "global.toml"
 
 
-def test_manifest_path_falls_back_to_data_dir(monkeypatch, tmp_path):
+def test_manifest_path_prefers_home_global_toml(monkeypatch, tmp_path):
+    """When ~/.conda/global.toml exists, use it (not sibling files under data_dir)."""
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".conda").mkdir(parents=True)
+    manifest_file = home / ".conda" / "global.toml"
+    manifest_file.write_text("[envs]\n")
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
+    data = tmp_path / "ignored-data"
+    data.mkdir()
+    (data / "manifest.toml").write_text("[other]\n")
+    monkeypatch.setattr("conda_global.paths.data_dir", lambda: data)
+    assert paths.manifest_path() == manifest_file
+
+
+def test_manifest_path_manifest_toml_fallback_in_data_dir(monkeypatch, tmp_path):
     home = tmp_path / "home"
     home.mkdir()
     (home / ".conda").mkdir()
@@ -53,6 +68,18 @@ def test_manifest_path_falls_back_to_data_dir(monkeypatch, tmp_path):
     monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
     monkeypatch.setattr("conda_global.paths.data_dir", lambda: data)
     assert paths.manifest_path() == data / "global.toml"
+
+
+def test_manifest_path_manifest_toml_name_in_data_dir(monkeypatch, tmp_path):
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".conda").mkdir()
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / "manifest.toml").write_text("[envs]")
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
+    monkeypatch.setattr("conda_global.paths.data_dir", lambda: data)
+    assert paths.manifest_path() == data / "manifest.toml"
 
 
 @pytest.mark.parametrize(
