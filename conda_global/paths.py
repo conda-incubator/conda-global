@@ -13,16 +13,20 @@ def data_dir() -> Path:
 
     Resolution order:
     1. ``CONDA_GLOBAL_HOME`` environment variable (explicit override)
-    2. ``~/.cg/`` if it already exists (legacy installs keep working)
-    3. ``~/.conda/global/`` (new default for fresh installs)
+    2. ``~/.conda/global/`` if ``~/.conda/global.toml`` exists (migrated)
+    3. ``~/.cg/`` if it already exists (legacy installs keep working)
+    4. ``~/.conda/global/`` (new default for fresh installs)
     """
     env = os.environ.get("CONDA_GLOBAL_HOME")
     if env:
         return Path(env).expanduser().resolve()
+    new = Path.home() / ".conda" / "global"
+    if (Path.home() / ".conda" / "global.toml").is_file():
+        return new
     legacy = legacy_data_dir()
     if legacy.is_dir():
         return legacy
-    return Path.home() / ".conda" / "global"
+    return new
 
 
 def legacy_data_dir() -> Path:

@@ -56,17 +56,22 @@ def test_manifest_path_falls_back_to_data_dir(monkeypatch, tmp_path):
 
 
 @pytest.mark.parametrize(
-    "legacy_exists,expected_suffix",
+    "legacy_exists,manifest_exists,expected_suffix",
     [
-        pytest.param(False, ".conda/global", id="fresh-install"),
-        pytest.param(True, ".cg", id="legacy-exists"),
+        pytest.param(False, False, ".conda/global", id="fresh-install"),
+        pytest.param(True, False, ".cg", id="legacy-not-migrated"),
+        pytest.param(True, True, ".conda/global", id="legacy-migrated"),
+        pytest.param(False, True, ".conda/global", id="new-with-manifest"),
     ],
 )
-def test_data_dir_default(monkeypatch, tmp_path, legacy_exists, expected_suffix):
+def test_data_dir_default(monkeypatch, tmp_path, legacy_exists, manifest_exists, expected_suffix):
     home = tmp_path / "home"
     home.mkdir()
     if legacy_exists:
         (home / ".cg").mkdir()
+    if manifest_exists:
+        (home / ".conda").mkdir(parents=True, exist_ok=True)
+        (home / ".conda" / "global.toml").write_text("[envs]\n")
     monkeypatch.delenv("CONDA_GLOBAL_HOME", raising=False)
     monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
     assert paths.data_dir() == home / expected_suffix

@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from rich.console import Console
 
 from ..migrate import MigrationStatus, migrate_data_dir, remove_legacy_dir
-from ..paths import data_dir, legacy_data_dir
+from ..paths import data_dir, legacy_data_dir, manifest_path
 from .sync import execute_sync
 
 if TYPE_CHECKING:
@@ -39,6 +39,8 @@ def execute_migrate(args: argparse.Namespace, *, console: Console | None = None)
         )
         return 1
 
+    data_dir.cache_clear()
+    manifest_path.cache_clear()
     new = data_dir()
     console.print(f"[bold cyan]Migrating[/bold cyan] [bold]{legacy}[/bold] → [bold]{new}[/bold]")
     console.print()
