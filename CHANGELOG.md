@@ -23,7 +23,7 @@ Initial release of conda-global and conda-trampoline.
   conda ecosystem.
 - **Rust trampoline launcher** (`conda-trampoline`): a small binary that reads a
   JSON config and launches the real tool with zero conda activation overhead.
-- **Manifest-driven**: all state is tracked in `~/.cg/global.toml`, making it
+- **Manifest-driven**: all state is tracked in `~/.conda/global/manifest.toml`, making it
   easy to share, back up, and version-control your global tool set.
 - **conda plugin**: registers as `conda global` via pluggy, so all commands are
   available as conda subcommands.
@@ -42,7 +42,7 @@ Initial release of conda-global and conda-trampoline.
 - `conda global tree` — show dependency tree for a tool env
 - `conda global pin` / `unpin` — lock or unlock a tool from upgrades
 - `conda global ensurepath` — add the bin directory to your shell PATH
-- `conda global edit` — open `global.toml` in your editor
+- `conda global edit` — open `manifest.toml` in your editor
 - `conda global status` — show summary of installed tools and PATH status
 
 ### Packages

@@ -35,7 +35,9 @@ def tool_with_binary(mock_conda_home, monkeypatch):
     trampoline_dir.mkdir(parents=True)
     (trampoline_dir / "_cg_trampoline").write_bytes(b"fake trampoline")
 
-    Manifest(mock_conda_home / "global.toml").add(ToolEnv(name="ruff", dependencies={"ruff": "*"}))
+    Manifest(mock_conda_home / "manifest.toml").add(
+        ToolEnv(name="ruff", dependencies={"ruff": "*"})
+    )
 
     return mock_conda_home
 
@@ -53,7 +55,7 @@ def test_expose(tool_with_binary, rich_console, mapping, expected_key):
     assert result == 0
     assert "Exposed" in rich_console.file.getvalue()
 
-    loaded = Manifest(tool_with_binary / "global.toml").load()
+    loaded = Manifest(tool_with_binary / "manifest.toml").load()
     assert expected_key in loaded["ruff"].exposed
 
 
@@ -64,7 +66,7 @@ def test_expose_nonexistent_tool(mock_conda_home, rich_console):
 
 
 def test_hide_binary(tool_with_binary, rich_console):
-    manifest = Manifest(tool_with_binary / "global.toml")
+    manifest = Manifest(tool_with_binary / "manifest.toml")
     tool = manifest.load()["ruff"]
     tool.exposed["ruff"] = "ruff"
     manifest.save(manifest.load() | {"ruff": tool})

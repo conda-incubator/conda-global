@@ -1,6 +1,6 @@
 # Sharing manifests
 
-The `global.toml` manifest is a plain text file that describes all
+The `manifest.toml` manifest is a plain text file that describes all
 your globally installed tools. You can share it across machines to
 replicate your setup.
 
@@ -51,7 +51,7 @@ exposed = { bat = "bat", batcat = "bat" }
 
 ## Version control tips
 
-- Commit `global.toml` to your dotfiles repo
+- Commit `manifest.toml` to your dotfiles repo
 - Use `conda global pin` for tools where version stability matters
 - Use version specs (`>=0.4`) instead of `*` for critical tools
 - Run `conda global sync` as part of your machine bootstrap script

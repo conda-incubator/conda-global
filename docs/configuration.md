@@ -2,7 +2,7 @@
 
 ## Manifest
 
-The manifest at `~/.cg/global.toml` is the source of truth for
+The manifest at `~/.conda/global/manifest.toml` is the source of truth for
 all globally installed tools. It is written by conda-global commands
 and can also be edited by hand.
 
@@ -51,7 +51,7 @@ exposed = { "python3.14" = "python3.14", pip = "pip3.14" }
 ## Filesystem layout
 
 ```
-~/.cg/
+~/.conda/global/
 ├── bin/                         ← exposed trampolines (on PATH)
 │   ├── ruff                       hardlink → trampoline/_cg_trampoline
 │   ├── gh                         hardlink → trampoline/_cg_trampoline
@@ -66,30 +66,30 @@ exposed = { "python3.14" = "python3.14", pip = "pip3.14" }
 │   └── gh/
 │       ├── bin/gh
 │       └── conda-meta/
-└── global.toml                  ← manifest
+└── manifest.toml                ← manifest
 ```
 
-On Windows, `~/.cg` is `%USERPROFILE%\.cg` and `bin/` uses
-platform-appropriate extensions (`.exe`).
+On Windows, `~/.conda/global` is `%USERPROFILE%\.conda\global` and
+`bin/` uses platform-appropriate extensions (`.exe`).
 
 ### Paths
 
 | Path | Purpose |
 |------|---------|
-| `~/.cg/bin/` | Trampoline directory, added to PATH |
-| `~/.cg/bin/trampoline/` | Master binary and JSON configs |
-| `~/.cg/envs/` | Tool environments (one prefix per tool) |
-| `~/.cg/global.toml` | Manifest |
+| `~/.conda/global/bin/` | Trampoline directory, added to PATH |
+| `~/.conda/global/bin/trampoline/` | Master binary and JSON configs |
+| `~/.conda/global/envs/` | Tool environments (one prefix per tool) |
+| `~/.conda/global/manifest.toml` | Manifest |
 
 ## Trampoline config files
 
 Each exposed binary has a JSON config at
-`~/.cg/bin/trampoline/<name>.json`:
+`~/.conda/global/bin/trampoline/<name>.json`:
 
 ```json
 {
-  "exe": "/home/user/.cg/envs/gh/bin/gh",
-  "path_diff": "/home/user/.cg/envs/gh/bin",
+  "exe": "/home/user/.conda/global/envs/gh/bin/gh",
+  "path_diff": "/home/user/.conda/global/envs/gh/bin",
   "env": {}
 }
 ```
@@ -110,8 +110,26 @@ for debugging.
 
 `CONDA_GLOBAL_HOME`
 : Override the base directory for all conda-global paths (manifest,
-  environments, trampolines). Defaults to `~/.cg`. Supports `~`
-  expansion and relative paths.
+  environments, trampolines). Without this variable, conda-global
+  uses `~/.cg/` if it exists (legacy), otherwise `~/.conda/global/`
+  (new default). Supports `~` expansion and relative paths.
+
+## Migration from ~/.cg/
+
+Previous versions of conda-global stored data in `~/.cg/`. If that
+directory exists, conda-global continues to use it automatically —
+no action is required. New installs use `~/.conda/global/` by default.
+
+To migrate explicitly, run:
+
+```bash
+conda global migrate
+```
+
+This copies your manifest to the new location, reinstalls all tools
+with a fresh `sync`, and removes the old directory. After migration,
+update your PATH (replace `~/.cg/bin` with `~/.conda/global/bin`)
+or run `conda global ensurepath`.
 
 `EDITOR` / `VISUAL`
 : Used by `conda global edit` to open the manifest. `VISUAL` takes

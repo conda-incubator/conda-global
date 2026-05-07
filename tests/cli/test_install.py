@@ -40,7 +40,7 @@ def test_install_basic(
     assert "Installing" in output
     assert "Installed" in output
 
-    tools = Manifest(mock_conda_home / "global.toml").load()
+    tools = Manifest(mock_conda_home / "manifest.toml").load()
     assert "gh" in tools
     assert tools["gh"].dependencies == {"gh": "*"}
     assert "gh" in tools["gh"].exposed
@@ -62,7 +62,7 @@ def test_install_custom_env_name(
     )
     assert result == 0
 
-    tools = Manifest(mock_conda_home / "global.toml").load()
+    tools = Manifest(mock_conda_home / "manifest.toml").load()
     assert "github-cli" in tools
     assert fake_envs_create[0]["name"] == "github-cli"
 
@@ -79,7 +79,7 @@ def test_install_custom_channel(
     )
     assert result == 0
 
-    tools = Manifest(mock_conda_home / "global.toml").load()
+    tools = Manifest(mock_conda_home / "manifest.toml").load()
     assert tools["gh"].channels == ["nvidia", "conda-forge"]
 
 
@@ -104,7 +104,7 @@ def test_install_expose(
     )
     assert result == 0
 
-    tools = Manifest(mock_conda_home / "global.toml").load()
+    tools = Manifest(mock_conda_home / "manifest.toml").load()
     assert tools["gh"].exposed == expected_exposed
     assert "Commands now available" in rich_console.file.getvalue()
 

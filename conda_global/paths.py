@@ -7,14 +7,24 @@ from pathlib import Path
 
 
 def data_dir() -> Path:
-    """Return the base data directory for conda-global (``~/.cg/``).
+    """Return the base data directory for conda-global.
 
-    Respects the ``CONDA_GLOBAL_HOME`` environment variable.
-    Falls back to ``~/.cg/``.
+    Resolution order:
+    1. ``CONDA_GLOBAL_HOME`` environment variable (explicit override)
+    2. ``~/.cg/`` if it already exists (legacy installs keep working)
+    3. ``~/.conda/global/`` (new default for fresh installs)
     """
     env = os.environ.get("CONDA_GLOBAL_HOME")
     if env:
         return Path(env).expanduser().resolve()
+    legacy = _legacy_data_dir()
+    if legacy.is_dir():
+        return legacy
+    return Path.home() / ".conda" / "global"
+
+
+def _legacy_data_dir() -> Path:
+    """Return the old default data directory (~/.cg/)."""
     return Path.home() / ".cg"
 
 
@@ -39,5 +49,16 @@ def trampoline_master_path() -> Path:
 
 
 def manifest_path() -> Path:
-    """Return the path to the global manifest."""
-    return data_dir() / "global.toml"
+    """Return the path to the global manifest.
+
+    Prefers ``manifest.toml`` (new name); falls back to ``global.toml``
+    (legacy name) if it exists and the new name does not.
+    """
+    base = data_dir()
+    new = base / "manifest.toml"
+    if new.exists():
+        return new
+    old = base / "global.toml"
+    if old.exists():
+        return old
+    return new

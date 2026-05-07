@@ -39,7 +39,7 @@ def test_uninstall_removes_env_and_manifest(
     assert "Uninstalling" in output
     assert "Uninstalled" in output
 
-    assert "gh" not in Manifest(mock_conda_home / "global.toml").load()
+    assert "gh" not in Manifest(mock_conda_home / "manifest.toml").load()
     assert not env_dir.exists()
     assert not trampoline.exists()
 

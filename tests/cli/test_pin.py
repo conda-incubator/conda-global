@@ -20,7 +20,7 @@ from conda_global.models import ToolEnv
     ],
 )
 def test_pin_unpin(mock_conda_home, rich_console, handler, initial, expected, label):
-    manifest = Manifest(mock_conda_home / "global.toml")
+    manifest = Manifest(mock_conda_home / "manifest.toml")
     manifest.add(ToolEnv(name="gh", dependencies={"gh": "*"}, pinned=initial))
 
     result = handler(argparse.Namespace(environment="gh"), console=rich_console)

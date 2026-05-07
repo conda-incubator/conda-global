@@ -78,7 +78,7 @@ conda global ensurepath
 | `conda global pin -e <env>` | Prevent upgrades |
 | `conda global unpin -e <env>` | Allow upgrades |
 | `conda global ensurepath` | Add bin directory to PATH |
-| `conda global edit` | Edit global.toml |
+| `conda global edit` | Edit manifest.toml |
 
 A standalone `cg` alias is also available (`cg install ruff`, etc.).
 

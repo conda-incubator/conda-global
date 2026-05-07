@@ -27,7 +27,7 @@ def test_add_package(
     assert "Adding" in output
     assert "Added" in output
 
-    tools = Manifest(mock_conda_home / "global.toml").load()
+    tools = Manifest(mock_conda_home / "manifest.toml").load()
     assert "black" in tools["ruff"].dependencies
 
     specs = fake_envs_create[0]["packages"]

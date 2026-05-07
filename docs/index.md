@@ -66,7 +66,7 @@ overhead.
 │   └── gh/               ← isolated env
 │       ├── bin/gh          ← real binary
 │       └── conda-meta/
-└── global.toml           ← manifest
+└── manifest.toml         ← manifest
 ```
 
 ## Why conda-global?
@@ -90,7 +90,7 @@ between tools, ever.
 ::::::
 
 ::::::{grid-item-card} {octicon}`sync;1em` Portable manifest
-Share `global.toml` across machines. Run `conda global sync` to reconcile.
+Share `manifest.toml` across machines. Run `conda global sync` to reconcile.
 ::::::
 
 :::::::

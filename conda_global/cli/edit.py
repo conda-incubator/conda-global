@@ -19,7 +19,7 @@ def execute_edit(
     *,
     console: Console | None = None,
 ) -> int:
-    """Open global.toml in $EDITOR."""
+    """Open manifest.toml in $EDITOR."""
     console = console or Console(highlight=False)
     path = manifest_path()
 

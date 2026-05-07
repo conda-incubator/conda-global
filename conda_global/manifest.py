@@ -1,4 +1,4 @@
-"""Read and write the global manifest (~/.conda/global.toml)."""
+"""Read and write the global manifest (~/.conda/global/manifest.toml)."""
 
 from __future__ import annotations
 
@@ -18,8 +18,8 @@ class Manifest:
 
     Usage::
 
-        manifest = Manifest()                    # ~/.conda/global.toml
-        manifest = Manifest(tmp / "global.toml") # test path
+        manifest = Manifest()                        # ~/.conda/global/manifest.toml
+        manifest = Manifest(tmp / "manifest.toml")  # test path
 
         tools = manifest.load()
         manifest.add(tool)
