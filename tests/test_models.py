@@ -56,3 +56,20 @@ def test_specs(deps, expected):
 def test_prefix_path(tmp_path):
     tool = ToolEnv(name="gh")
     assert tool.prefix_path(tmp_path) == tmp_path / "gh"
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        pytest.param("../evil", id="dotdot-slash"),
+        pytest.param("foo/bar", id="slash"),
+        pytest.param("foo\\bar", id="backslash"),
+        pytest.param(".hidden", id="leading-dot"),
+        pytest.param("-dash", id="leading-dash"),
+        pytest.param("", id="empty"),
+        pytest.param("a\x00b", id="null-byte"),
+    ],
+)
+def test_invalid_name_rejected(name):
+    with pytest.raises(ValueError, match="Invalid environment name"):
+        ToolEnv(name=name)
