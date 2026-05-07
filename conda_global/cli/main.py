@@ -119,7 +119,7 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
         help="Environment to inspect",
     )
 
-    sub.add_parser("edit", help="Open manifest.toml in $EDITOR")
+    sub.add_parser("edit", help="Open global.toml in $EDITOR")
 
     sub.add_parser("ensurepath", help="Add the global bin directory to PATH")
 

@@ -51,14 +51,16 @@ def trampoline_master_path() -> Path:
 def manifest_path() -> Path:
     """Return the path to the global manifest.
 
-    Prefers ``manifest.toml`` (new name); falls back to ``global.toml``
-    (legacy name) if it exists and the new name does not.
+    New location: ``~/.conda/global.toml`` (sibling to the data dir).
+    Falls back to ``<data_dir>/global.toml`` or ``<data_dir>/manifest.toml``
+    for legacy installs where the manifest lived inside the data directory.
     """
-    base = data_dir()
-    new = base / "manifest.toml"
+    new = Path.home() / ".conda" / "global.toml"
     if new.exists():
         return new
-    old = base / "global.toml"
-    if old.exists():
-        return old
+    base = data_dir()
+    for name in ("global.toml", "manifest.toml"):
+        candidate = base / name
+        if candidate.exists():
+            return candidate
     return new

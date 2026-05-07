@@ -54,7 +54,7 @@ gh version 2.74.0 (2025-05-05)
 1. conda-global created an isolated environment in its data directory
 2. It installed the `gh` package from conda-forge into that environment
 3. It deployed a Rust trampoline binary to the bin directory
-4. It recorded the tool in the manifest (`manifest.toml`)
+4. It recorded the tool in the manifest (`~/.conda/global.toml`)
 
 The trampoline is a tiny native binary that reads a JSON config and
 launches the real `gh` binary with the correct environment — no shell

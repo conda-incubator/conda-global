@@ -2,7 +2,7 @@
 
 ## Manifest
 
-The manifest at `~/.conda/global/manifest.toml` is the source of truth for
+The manifest at `~/.conda/global.toml` is the source of truth for
 all globally installed tools. It is written by conda-global commands
 and can also be edited by hand.
 
@@ -51,22 +51,23 @@ exposed = { "python3.14" = "python3.14", pip = "pip3.14" }
 ## Filesystem layout
 
 ```
-~/.conda/global/
-├── bin/                         ← exposed trampolines (on PATH)
-│   ├── ruff                       hardlink → trampoline/_cg_trampoline
-│   ├── gh                         hardlink → trampoline/_cg_trampoline
-│   └── trampoline/
-│       ├── _cg_trampoline         master binary (compiled Rust)
-│       ├── ruff.json              config for ruff trampoline
-│       └── gh.json                config for gh trampoline
-├── envs/                        ← isolated tool environments
-│   ├── ruff/
-│   │   ├── bin/ruff               real binary
-│   │   └── conda-meta/           conda metadata (marks valid env)
-│   └── gh/
-│       ├── bin/gh
-│       └── conda-meta/
-└── manifest.toml                ← manifest
+~/.conda/
+├── global.toml                  ← manifest (source of truth)
+└── global/
+    ├── bin/                     ← exposed trampolines (on PATH)
+    │   ├── ruff                   hardlink → trampoline/_cg_trampoline
+    │   ├── gh                     hardlink → trampoline/_cg_trampoline
+    │   └── trampoline/
+    │       ├── _cg_trampoline     master binary (compiled Rust)
+    │       ├── ruff.json          config for ruff trampoline
+    │       └── gh.json            config for gh trampoline
+    └── envs/                    ← isolated tool environments
+        ├── ruff/
+        │   ├── bin/ruff           real binary
+        │   └── conda-meta/       conda metadata (marks valid env)
+        └── gh/
+            ├── bin/gh
+            └── conda-meta/
 ```
 
 On Windows, `~/.conda/global` is `%USERPROFILE%\.conda\global` and
@@ -76,10 +77,10 @@ On Windows, `~/.conda/global` is `%USERPROFILE%\.conda\global` and
 
 | Path | Purpose |
 |------|---------|
+| `~/.conda/global.toml` | Manifest (source of truth) |
 | `~/.conda/global/bin/` | Trampoline directory, added to PATH |
 | `~/.conda/global/bin/trampoline/` | Master binary and JSON configs |
 | `~/.conda/global/envs/` | Tool environments (one prefix per tool) |
-| `~/.conda/global/manifest.toml` | Manifest |
 
 ## Trampoline config files
 
@@ -109,10 +110,11 @@ for debugging.
 ## Environment variables
 
 `CONDA_GLOBAL_HOME`
-: Override the base directory for all conda-global paths (manifest,
-  environments, trampolines). Without this variable, conda-global
-  uses `~/.cg/` if it exists (legacy), otherwise `~/.conda/global/`
-  (new default). Supports `~` expansion and relative paths.
+: Override the base directory for environments and trampolines.
+  Without this variable, conda-global uses `~/.cg/` if it exists
+  (legacy), otherwise `~/.conda/global/` (new default). The manifest
+  always lives at `~/.conda/global.toml` regardless of this setting.
+  Supports `~` expansion and relative paths.
 
 ## Migration from ~/.cg/
 

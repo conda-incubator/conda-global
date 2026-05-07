@@ -46,7 +46,7 @@ conda-global brings isolated tool management into conda itself:
 | Isolation | virtualenvs | pixi envs | conda envs |
 | Launcher | Python scripts | Rust trampolines | Rust trampolines |
 | Startup overhead | interpreter startup | negligible | negligible |
-| Manifest | none | `~/.pixi/manifests/pixi-global.toml` | `manifest.toml` |
+| Manifest | none | `~/.pixi/manifests/pixi-global.toml` | `~/.conda/global.toml` |
 | CLI integration | standalone | pixi CLI | `conda global` + `cg` alias |
 | Non-Python tools | no | yes | yes |
 | Cross-machine sync | no | yes | yes |
@@ -63,7 +63,7 @@ Hardlinks over copies
   keeps disk usage flat regardless of how many tools are exposed.
 
 Manifest-first approach
-: The `manifest.toml` manifest is the source of truth. You can edit it
+: The `global.toml` manifest is the source of truth. You can edit it
   by hand, check it into version control, and run
   `conda global sync` on any machine to reproduce your setup.
 

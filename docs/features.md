@@ -79,7 +79,7 @@ to add or remove exposed binaries without reinstalling.
 
 ## Manifest
 
-The manifest (`manifest.toml`) records all tools, their
+The manifest (`~/.conda/global.toml`) records all tools, their
 channels, dependencies, exposed binaries, and pin status. It is
 the source of truth for `conda global sync`.
 

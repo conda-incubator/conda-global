@@ -25,10 +25,24 @@ def test_path_helpers(func, expected_suffix, monkeypatch, tmp_path):
 
 
 def test_manifest_path_default(monkeypatch, tmp_path):
-    data = tmp_path / "conda-global"
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".conda").mkdir()
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
+    monkeypatch.setattr("conda_global.paths.data_dir", lambda: tmp_path / "data")
+    assert paths.manifest_path() == home / ".conda" / "global.toml"
+
+
+def test_manifest_path_falls_back_to_data_dir(monkeypatch, tmp_path):
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".conda").mkdir()
+    data = tmp_path / "data"
     data.mkdir()
+    (data / "global.toml").write_text("[envs]")
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
     monkeypatch.setattr("conda_global.paths.data_dir", lambda: data)
-    assert paths.manifest_path() == data / "manifest.toml"
+    assert paths.manifest_path() == data / "global.toml"
 
 
 @pytest.mark.parametrize(
@@ -52,7 +66,6 @@ def test_data_dir_respects_env_var(monkeypatch, tmp_path):
     monkeypatch.setenv("CONDA_GLOBAL_HOME", str(tmp_path / "custom"))
     assert paths.data_dir() == tmp_path / "custom"
     assert paths.global_envs_dir() == tmp_path / "custom" / "envs"
-    assert paths.manifest_path() == tmp_path / "custom" / "manifest.toml"
 
 
 def test_data_dir_env_var_tilde_expansion(monkeypatch):

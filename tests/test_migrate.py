@@ -14,14 +14,16 @@ from conda_global.migrate import (
 
 @pytest.fixture
 def fake_home(tmp_path, monkeypatch):
-    """Redirect _legacy_data_dir and _new_data_dir to tmp_path-based dirs."""
+    """Redirect _legacy_data_dir, _new_data_dir, and _new_manifest_path."""
     home = tmp_path / "home"
     home.mkdir()
     legacy = home / ".cg"
     new = home / ".conda" / "global"
+    manifest = home / ".conda" / "global.toml"
     monkeypatch.setattr("conda_global.migrate._legacy_data_dir", lambda: legacy)
     monkeypatch.setattr("conda_global.migrate._new_data_dir", lambda: new)
-    return {"home": home, "legacy": legacy, "new": new}
+    monkeypatch.setattr("conda_global.migrate._new_manifest_path", lambda: manifest)
+    return {"home": home, "legacy": legacy, "new": new, "manifest": manifest}
 
 
 @pytest.mark.parametrize(
@@ -51,18 +53,18 @@ def test_migrate_data_dir(fake_home, setup, expected_status):
 
     if expected_status == MigrationStatus.MIGRATED:
         assert new.exists()
-        assert (new / "manifest.toml").read_text() == "[envs.gh]\n"
+        assert fake_home["manifest"].read_text() == "[envs.gh]\n"
 
 
 def test_migrate_copies_manifest_toml_name(fake_home):
-    """If legacy already uses manifest.toml, it's copied correctly."""
+    """If legacy already uses manifest.toml, it's copied to ~/.conda/global.toml."""
     legacy = fake_home["legacy"]
     legacy.mkdir(parents=True)
     (legacy / "manifest.toml").write_text("[envs.ruff]\n")
 
     result = migrate_data_dir()
     assert result == MigrationStatus.MIGRATED
-    assert (fake_home["new"] / "manifest.toml").read_text() == "[envs.ruff]\n"
+    assert fake_home["manifest"].read_text() == "[envs.ruff]\n"
 
 
 @pytest.mark.parametrize(

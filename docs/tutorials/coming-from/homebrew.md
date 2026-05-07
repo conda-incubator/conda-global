@@ -38,7 +38,7 @@ Cross-platform
 
 Manifest
 : Homebrew has no manifest. You reconstruct your setup with
-  `brew bundle dump` (Brewfile). conda-global writes `manifest.toml`
+  `brew bundle dump` (Brewfile). conda-global writes `~/.conda/global.toml`
   natively — sync it across machines with `conda global sync`.
 
 Channels

@@ -32,6 +32,13 @@ def _new_data_dir() -> Path:
     return Path.home() / ".conda" / "global"
 
 
+def _new_manifest_path() -> Path:
+    """The target manifest path for migration (~/.conda/global.toml)."""
+    from pathlib import Path
+
+    return Path.home() / ".conda" / "global.toml"
+
+
 def _find_legacy_manifest() -> Path | None:
     """Find the manifest file in the legacy directory."""
     legacy = _legacy_data_dir()
@@ -47,8 +54,8 @@ def _find_legacy_manifest() -> Path | None:
 def migrate_data_dir(*, force: bool = False) -> MigrationStatus:
     """Migrate from ~/.cg/ to ~/.conda/global/ via reinstall.
 
-    Copies the manifest to the new location, then the caller is
-    responsible for running sync to reinstall all tools. After sync
+    Copies the manifest to ``~/.conda/global.toml``, then the caller
+    is responsible for running sync to reinstall all tools. After sync
     succeeds, the old directory can be removed.
 
     Returns the migration status:
@@ -69,7 +76,9 @@ def migrate_data_dir(*, force: bool = False) -> MigrationStatus:
 
     old_manifest = _find_legacy_manifest()
     if old_manifest is not None:
-        shutil.copy2(str(old_manifest), str(new_dir / "manifest.toml"))
+        target = _new_manifest_path()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(str(old_manifest), str(target))
 
     return MigrationStatus.MIGRATED
 

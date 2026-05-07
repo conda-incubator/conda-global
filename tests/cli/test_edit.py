@@ -47,7 +47,7 @@ def test_edit_selects_editor(
     execute_edit(argparse.Namespace(), console=rich_console)
 
     assert recorded[0][0] == expected_cmd
-    assert "manifest.toml" in recorded[0][1]
+    assert recorded[0][1].endswith(".toml")
 
 
 def test_edit_creates_file_if_missing(
@@ -61,7 +61,9 @@ def test_edit_creates_file_if_missing(
 
     execute_edit(argparse.Namespace(), console=rich_console)
 
-    assert (mock_conda_home / "manifest.toml").exists()
+    from conda_global.paths import manifest_path
+
+    assert manifest_path().exists()
 
 
 def test_edit_returns_editor_exit_code(
