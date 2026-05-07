@@ -41,7 +41,7 @@ Integration
 Manifest location
 : pixi global stores its manifest at
   `~/.pixi/manifests/pixi-global.toml`. conda-global uses
-  `global.toml` in the data directory. The formats are different.
+  `~/.conda/global.toml`. The formats are different.
 
 Launcher
 : Both use compiled trampoline binaries for zero-overhead execution.

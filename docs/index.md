@@ -51,22 +51,23 @@ variables, and launches the real binary — with zero activation
 overhead.
 
 ```
-~/.cg/
-├── bin/
-│   ├── ruff              ← trampoline (hardlink)
-│   ├── gh                ← trampoline (hardlink)
-│   └── trampoline/
-│       ├── _cg_trampoline  ← master binary
-│       ├── ruff.json       ← config for ruff
-│       └── gh.json         ← config for gh
-├── envs/
-│   ├── ruff/             ← isolated env
-│   │   ├── bin/ruff        ← real binary
-│   │   └── conda-meta/
-│   └── gh/               ← isolated env
-│       ├── bin/gh          ← real binary
-│       └── conda-meta/
-└── global.toml           ← manifest
+~/.conda/
+├── global.toml           ← manifest (source of truth)
+└── global/
+    ├── bin/
+    │   ├── ruff            ← trampoline (hardlink)
+    │   ├── gh              ← trampoline (hardlink)
+    │   └── trampoline/
+    │       ├── _cg_trampoline  ← master binary
+    │       ├── ruff.json       ← config for ruff
+    │       └── gh.json         ← config for gh
+    └── envs/
+        ├── ruff/           ← isolated env
+        │   ├── bin/ruff      ← real binary
+        │   └── conda-meta/
+        └── gh/             ← isolated env
+            ├── bin/gh        ← real binary
+            └── conda-meta/
 ```
 
 ## Why conda-global?

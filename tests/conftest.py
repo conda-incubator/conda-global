@@ -21,13 +21,23 @@ def rich_console() -> Console:
 
 @pytest.fixture
 def mock_conda_home(tmp_path, monkeypatch):
-    """Mock the data directory to a temporary path.
+    """Mock the data directory and manifest path to a temporary path.
 
     CLI handlers construct ``Manifest()``, ``EnvironmentManager()``, and
     ``TrampolineManager()`` with default paths, so we patch the path
     functions they fall back to.
     """
+    from conda_global.paths import data_dir, manifest_path
+
+    data_dir.cache_clear()
+    manifest_path.cache_clear()
+
     data = tmp_path / "conda-global"
     data.mkdir()
+    manifest = data / "manifest.toml"
+    _manifest_fn = lambda: manifest  # noqa: E731
     monkeypatch.setattr("conda_global.paths.data_dir", lambda: data)
+    monkeypatch.setattr("conda_global.paths.manifest_path", _manifest_fn)
+    monkeypatch.setattr("conda_global.manifest._default_manifest_path", _manifest_fn)
+    monkeypatch.setattr("conda_global.cli.edit.manifest_path", _manifest_fn)
     return data

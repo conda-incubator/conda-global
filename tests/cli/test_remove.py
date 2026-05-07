@@ -27,7 +27,7 @@ def test_remove_package(
     assert "Removing" in output
     assert "Removed" in output
 
-    tools = Manifest(mock_conda_home / "global.toml").load()
+    tools = Manifest(mock_conda_home / "manifest.toml").load()
     assert "black" not in tools["ruff"].dependencies
     assert "ruff" in tools["ruff"].dependencies
     assert "black" not in fake_envs_create[0]["packages"]

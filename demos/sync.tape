@@ -25,7 +25,7 @@ Type "# The manifest is the source of truth"
 Enter
 Sleep 500ms
 
-Type@80ms `bat "$CONDA_GLOBAL_HOME/global.toml"`
+Type@80ms `bat ~/.conda/global.toml`
 Enter
 Wait /\$/
 Sleep 3s
@@ -34,7 +34,7 @@ Type "# Edit it directly (or use 'conda global edit')"
 Enter
 Sleep 500ms
 
-Type@80ms `cat >> "$CONDA_GLOBAL_HOME/global.toml" << 'EOF'`
+Type@80ms `cat >> ~/.conda/global.toml << 'EOF'`
 Enter
 Type ""
 Enter
@@ -53,7 +53,7 @@ Enter
 Wait /\$/
 Sleep 1s
 
-Type@80ms `bat "$CONDA_GLOBAL_HOME/global.toml"`
+Type@80ms `bat ~/.conda/global.toml`
 Enter
 Wait /\$/
 Sleep 3s

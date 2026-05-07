@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Default data directory for new installs moved from `~/.cg/` to
+  `~/.conda/global/`. Existing installs continue using `~/.cg/`
+  until explicitly migrated. (#8)
+- Manifest moved from inside the data directory to `~/.conda/global.toml`,
+  a flat file alongside the data directory for easy discoverability.
+- New `conda global migrate` subcommand performs a reinstall-based
+  migration from `~/.cg/` to the new layout. Copies the manifest,
+  runs a fresh `sync`, then removes the old directory.
+
 ## 0.1.1 (2026-04-01)
 
 ### Changes
@@ -23,7 +36,7 @@ Initial release of conda-global and conda-trampoline.
   conda ecosystem.
 - **Rust trampoline launcher** (`conda-trampoline`): a small binary that reads a
   JSON config and launches the real tool with zero conda activation overhead.
-- **Manifest-driven**: all state is tracked in `~/.cg/global.toml`, making it
+- **Manifest-driven**: all state is tracked in a single TOML file, making it
   easy to share, back up, and version-control your global tool set.
 - **conda plugin**: registers as `conda global` via pluggy, so all commands are
   available as conda subcommands.
@@ -42,7 +55,7 @@ Initial release of conda-global and conda-trampoline.
 - `conda global tree` — show dependency tree for a tool env
 - `conda global pin` / `unpin` — lock or unlock a tool from upgrades
 - `conda global ensurepath` — add the bin directory to your shell PATH
-- `conda global edit` — open `global.toml` in your editor
+- `conda global edit` — open `manifest.toml` in your editor
 - `conda global status` — show summary of installed tools and PATH status
 
 ### Packages

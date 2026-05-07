@@ -41,7 +41,7 @@ Launcher
   startup.
 
 Manifest
-: pipx has no manifest file. conda-global writes `global.toml`,
+: pipx has no manifest file. conda-global writes `~/.conda/global.toml`,
   which can be shared across machines and synced with
   `conda global sync`.
 

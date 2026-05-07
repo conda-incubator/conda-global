@@ -18,8 +18,8 @@ class Manifest:
 
     Usage::
 
-        manifest = Manifest()                    # ~/.conda/global.toml
-        manifest = Manifest(tmp / "global.toml") # test path
+        manifest = Manifest()                        # ~/.conda/global.toml
+        manifest = Manifest(tmp / "manifest.toml")  # test path
 
         tools = manifest.load()
         manifest.add(tool)

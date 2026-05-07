@@ -121,7 +121,7 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
 
     sub.add_parser("edit", help="Open global.toml in $EDITOR")
 
-    sub.add_parser("ensurepath", help="Add ~/.conda/bin to PATH")
+    sub.add_parser("ensurepath", help="Add the global bin directory to PATH")
 
     p_pin = sub.add_parser("pin", help="Prevent a tool from being upgraded")
     p_pin.add_argument(
@@ -137,6 +137,17 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
         "--environment",
         required=True,
         help="Environment to unpin",
+    )
+
+    p_migrate = sub.add_parser(
+        "migrate",
+        help="Migrate data from ~/.cg/ to ~/.conda/global/",
+    )
+    p_migrate.add_argument(
+        "--force",
+        action="store_true",
+        default=False,
+        help="Overwrite if target directory already exists",
     )
 
     return parser
@@ -228,6 +239,10 @@ def execute(args: argparse.Namespace) -> int:
             from .pin import execute_unpin
 
             return execute_unpin(args)
+        elif subcmd == "migrate":
+            from .migrate import execute_migrate
+
+            return execute_migrate(args)
         else:
             generate_parser().print_help()
             return 1

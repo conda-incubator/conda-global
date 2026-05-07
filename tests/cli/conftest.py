@@ -100,7 +100,7 @@ def fake_subprocess_run(monkeypatch):
 @pytest.fixture
 def seeded_manifest(mock_conda_home):
     """Return a helper that seeds the manifest with a ToolEnv."""
-    manifest = Manifest(mock_conda_home / "global.toml")
+    manifest = Manifest(mock_conda_home / "manifest.toml")
 
     def _seed(
         name: str = "gh",
