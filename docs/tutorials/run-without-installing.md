@@ -55,6 +55,27 @@ $ conda global run -c nvidia -c conda-forge cuda-toolkit -- nvcc --version
 
 This is similar to `pipx run` or `npx`.
 
+## conda global run or conda exec?
+
+Use `conda global run` when you are trying a package before deciding
+whether it belongs in your global tool manifest. It creates a temporary
+environment, runs the matching binary once, and removes the environment.
+If you like the tool, the next step is usually `conda global install`.
+
+Use [`conda-exec`](https://conda-incubator.github.io/conda-exec/) when the
+temporary environment is the workflow itself. `conda exec` reuses cached
+environments for repeated ephemeral commands, leaves your global manifest
+alone, supports PEP 723 script metadata, and can lock script environments
+for handoff or CI.
+
+| Need | Better fit |
+| ---- | ---------- |
+| Try a tool before installing it globally | `conda global run` |
+| Install the tool permanently on `PATH` | `conda global install` |
+| Reuse an ephemeral environment without adding it to the global manifest | `conda exec TOOL ...` |
+| Run a Python script with inline dependency metadata | `conda exec script.py` |
+| Share or reproduce a script environment | `conda exec --lock script.py` |
+
 ## When to use run vs install
 
 Use `conda global run` when you:
