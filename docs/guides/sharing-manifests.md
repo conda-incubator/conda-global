@@ -10,17 +10,23 @@ The manifest path varies by platform (see {doc}`../configuration`).
 Copy it to a new machine or keep it in a dotfiles repository:
 
 ```bash
-cp "$(conda global info --manifest)" ~/dotfiles/conda-global.toml
+cp ~/.conda/global.toml ~/dotfiles/conda-global.toml
 ```
 
-On the target machine, place the file in the data directory and run
-`conda global sync`.
+On the target machine, copy it to the manifest path, then run
+`conda global sync`:
+
+```bash
+mkdir -p ~/.conda
+cp ~/dotfiles/conda-global.toml ~/.conda/global.toml
+conda global sync
+```
 
 ## Sync on the new machine
 
 ![Edit the manifest and sync to reconcile](../../demos/sync.gif)
 
-After placing the manifest, run:
+After copying the manifest, run:
 
 ```bash
 conda global sync

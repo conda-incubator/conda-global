@@ -17,6 +17,14 @@ isolated conda environments and expose them on your PATH without polluting any
 project environment. It works like `pipx` for Python tools or `pixi global` for
 the pixi ecosystem, but for the entire conda package ecosystem.
 
+For one-off command execution without installing a persistent PATH tool, use
+[`conda-exec`](https://github.com/conda-incubator/conda-exec), installed
+separately with `conda install -c conda-forge conda-exec`:
+
+```bash
+conda exec ruff check .
+```
+
 ## Quick start
 
 ![Install ruff, use it, list tools, show dependency tree, and uninstall](demos/quickstart.gif)

@@ -31,8 +31,11 @@ Package ecosystem
   packages from conda channels — Python, R, Rust, C/C++, and more.
 
 One-off execution
-: `pipx run` maps to `conda exec`, which creates isolated conda
-  environments for one-off commands without making them global tools.
+: `pipx run` maps to
+  [conda-exec](https://github.com/conda-incubator/conda-exec), not
+  conda-global. Install it with `conda install -c conda-forge conda-exec`,
+  then use `conda exec <pkg>` for one-off commands without making them
+  global tools.
 
 Isolation mechanism
 : pipx creates virtualenvs. conda-global creates full conda

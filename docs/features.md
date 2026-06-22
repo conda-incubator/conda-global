@@ -13,7 +13,7 @@ Environments are standard conda prefixes. You can inspect them with
 conda commands:
 
 ```bash
-conda list -p "$(conda global info --envs-dir)/ruff"
+conda list -p ~/.conda/global/envs/ruff
 ```
 
 ## Rust trampolines
@@ -41,8 +41,8 @@ Each exposed binary has a JSON config:
 
 ```json
 {
-  "exe": "/home/user/.cg/envs/ruff/bin/ruff",
-  "path_diff": "/home/user/.cg/envs/ruff/bin",
+  "exe": "/home/user/.conda/global/envs/ruff/bin/ruff",
+  "path_diff": "/home/user/.conda/global/envs/ruff/bin",
   "env": {}
 }
 ```
