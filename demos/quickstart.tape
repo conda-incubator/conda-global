@@ -7,7 +7,7 @@ Hide
 Type `eval "$(pixi shell-hook -s bash -e dev)"`
 Enter
 Wait /\)/
-Type `export PS1="$DEMO_PS1" && mkdir -p /tmp/.demo-home && echo 'PS1="$ "' > /tmp/.demo-home/.bash_profile && export HOME=/tmp/.demo-home`
+Type `export DEMO_HOME=/tmp/.demo-home-quickstart && rm -rf "$DEMO_HOME" && mkdir -p "$DEMO_HOME" && echo 'PS1="$ "' > "$DEMO_HOME/.bash_profile" && export HOME="$DEMO_HOME" && export CONDARC="$(pwd)/demos/condarc" && export PS1="$DEMO_PS1"`
 Enter
 Wait /\$/
 Type `export CONDA_GLOBAL_HOME=/tmp/.cg-demo-quickstart && rm -rf "$CONDA_GLOBAL_HOME" && export PATH="$CONDA_GLOBAL_HOME/bin:$PATH"`
@@ -58,7 +58,7 @@ Type "# Clean up"
 Enter
 Sleep 500ms
 
-Type@80ms "conda global uninstall -e ruff"
+Type@80ms "conda global uninstall ruff"
 Enter
 Wait /\$/
 Sleep 2s
