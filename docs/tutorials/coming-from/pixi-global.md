@@ -10,7 +10,7 @@ since conda-global's design is directly inspired by pixi.
 | pixi global | conda-global | Notes |
 |-------------|-------------|-------|
 | `pixi global install <pkg>` | `conda global install <pkg>` | |
-| `pixi global remove <pkg>` | `conda global uninstall -e <pkg>` | |
+| `pixi global remove <pkg>` | `conda global uninstall <pkg>` | |
 | `pixi global update <pkg>` | `conda global update -e <pkg>` | |
 | `pixi global update-all` | `conda global update` | Skips pinned tools |
 | `pixi global list` | `conda global list` | Also supports `--json` |

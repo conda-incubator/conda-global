@@ -105,7 +105,7 @@ github-cli
 Remove the tool, its environment, and all trampolines:
 
 ```bash
-$ conda global uninstall -e github-cli
+$ conda global uninstall github-cli
   Uninstalling tool github-cli...
   Uninstalled tool github-cli
 ```

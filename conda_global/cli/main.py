@@ -45,9 +45,15 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
 
     p_uninstall = sub.add_parser("uninstall", help="Remove a tool and its environment")
     p_uninstall.add_argument(
+        "environment_arg",
+        nargs="?",
+        metavar="environment",
+        help="Environment to remove",
+    )
+    p_uninstall.add_argument(
         "-e",
         "--environment",
-        required=True,
+        default=None,
         help="Environment to remove",
     )
 
