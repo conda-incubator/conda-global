@@ -14,14 +14,6 @@ Install a tool, customize its channels, expose additional binaries,
 and manage dependencies.
 :::
 
-:::{grid-item-card} {octicon}`play;1em` Run without installing
-:link: run-without-installing
-:link-type: doc
-
-Execute a tool in a temporary environment — try before you install,
-or run one-off commands.
-:::
-
 :::{grid-item-card} {octicon}`arrow-switch;1em` Coming from…
 :link: coming-from/index
 :link-type: doc
@@ -35,6 +27,5 @@ Migration guides for pipx, Homebrew, and pixi global users.
 :hidden:
 
 first-tool
-run-without-installing
 coming-from/index
 ```

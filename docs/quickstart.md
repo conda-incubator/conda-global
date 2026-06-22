@@ -71,9 +71,6 @@ gh     gh             conda-forge   gh
 # Install another tool
 $ conda global install ruff
 
-# Run a tool without installing it permanently
-$ conda global run bat -- README.md
-
 # Update all tools
 $ conda global update
 

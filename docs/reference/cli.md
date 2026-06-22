@@ -207,38 +207,6 @@ conda global hide fmt -e black
 
 ---
 
-## run
-
-Run a tool from a temporary environment without installing it
-permanently.
-
-```
-conda global run <package> [-c <channel>...] [--override-channels] [--use-local] [-- <args>...]
-```
-
-`package`
-: Package to run.
-
-`-c`, `--channel`
-: Additional channel to search before configured channels. Repeatable.
-
-`--override-channels`
-: Only search channels passed with `-c` and skip configured channels.
-
-`--use-local`
-: Use locally built packages, equivalent to adding `-c local`.
-
-`args`
-: Arguments passed to the tool. Use `--` to separate from
-  conda-global flags.
-
-```bash
-conda global run cowsay -- "hello from conda"
-conda global run -c conda-forge bat -- README.md
-```
-
----
-
 ## tree
 
 Show the dependency tree for a tool environment.

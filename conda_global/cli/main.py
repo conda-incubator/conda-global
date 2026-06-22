@@ -102,11 +102,6 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
         help="Source environment",
     )
 
-    p_run = sub.add_parser("run", help="Run a tool without permanent install")
-    p_run.add_argument("package", help="Package to run")
-    add_parser_channels(p_run)
-    p_run.add_argument("args", nargs=argparse.REMAINDER, help="Arguments to pass")
-
     p_tree = sub.add_parser("tree", help="Show dependency tree")
     p_tree.add_argument(
         "-e",
@@ -219,10 +214,6 @@ def execute(args: argparse.Namespace | tuple[str]) -> int:
             from .expose import execute_hide
 
             return execute_hide(args)
-        elif subcmd == "run":
-            from .run import execute_run
-
-            return execute_run(args)
         elif subcmd == "tree":
             from .tree import execute_tree
 

@@ -18,7 +18,6 @@ since conda-global's design is directly inspired by pixi.
 | `pixi global expose remove <name>` | `conda global hide <name> -e <env>` | |
 | `pixi global sync` | `conda global sync` | Same concept |
 | `pixi global edit` | `conda global edit` | Opens the manifest in `$EDITOR` |
-| — | `conda global run <pkg>` | Ephemeral run without permanent install |
 | — | `conda global add <dep> -e <env>` | Add a dependency to an existing env |
 | — | `conda global remove <dep> -e <env>` | Remove a dependency |
 | — | `conda global pin -e <env>` | Prevent upgrades |
@@ -48,9 +47,13 @@ Launcher
   conda-global uses Rust trampolines with hardlinks, similar to
   pixi's approach.
 
+One-off execution
+: pixi uses top-level `pixi exec` for temporary environments. The
+  conda equivalent is `conda exec`, not `conda global`.
+
 Extra commands
-: conda-global adds `run` (ephemeral execution), `pin`/`unpin`,
-  `tree`, and `ensurepath` which pixi global does not have.
+: conda-global adds `pin`/`unpin`, `tree`, and `ensurepath` which
+  pixi global does not have.
 
 Shorthand
 : conda-global provides a `cg` alias for faster typing:

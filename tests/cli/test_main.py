@@ -51,22 +51,20 @@ def test_generate_parser_uninstall_accepts_environment_forms(
     assert args.environment == environment
 
 
-@pytest.mark.parametrize("subcmd", ["install", "run"])
-def test_generate_parser_accepts_channel_customization(subcmd):
+def test_generate_parser_accepts_channel_customization():
     parser = generate_parser()
     args = parser.parse_args(
-        [subcmd, "-c", "conda-forge", "--use-local", "--override-channels", "gh"]
+        ["install", "-c", "conda-forge", "--use-local", "--override-channels", "gh"]
     )
-    assert args.subcmd == subcmd
+    assert args.subcmd == "install"
     assert args.channel == ["conda-forge"]
     assert args.use_local is True
     assert args.override_channels is True
 
 
-@pytest.mark.parametrize("subcmd", ["install", "run"])
-def test_generate_parser_leaves_use_local_unset_by_default(subcmd):
+def test_generate_parser_leaves_use_local_unset_by_default():
     parser = generate_parser()
-    args = parser.parse_args([subcmd, "gh"])
+    args = parser.parse_args(["install", "gh"])
     assert args.use_local is NULL
 
 
@@ -165,7 +163,6 @@ def test_execute_accepts_argv_tuple(monkeypatch):
         ("update", "conda_global.cli.update.execute_update"),
         ("expose", "conda_global.cli.expose.execute_expose"),
         ("hide", "conda_global.cli.expose.execute_hide"),
-        ("run", "conda_global.cli.run.execute_run"),
         ("tree", "conda_global.cli.tree.execute_tree"),
         ("edit", "conda_global.cli.edit.execute_edit"),
         ("ensurepath", "conda_global.cli.ensurepath.execute_ensurepath"),
