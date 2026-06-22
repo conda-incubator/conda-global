@@ -3,10 +3,16 @@
 from __future__ import annotations
 
 import argparse
+from typing import TYPE_CHECKING
 
 import pytest
+from conda.base.context import context, reset_context
+from conda.common.constants import NULL
 
 from conda_global.cli.main import execute, generate_parser
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def test_generate_parser_migrate_accept_force_flag():
@@ -33,6 +39,58 @@ def test_generate_parser_uninstall_accepts_environment_forms(
     assert args.subcmd == "uninstall"
     assert args.environment_arg == environment_arg
     assert args.environment == environment
+
+
+@pytest.mark.parametrize("subcmd", ["install", "run"])
+def test_generate_parser_accepts_channel_customization(subcmd):
+    parser = generate_parser()
+    args = parser.parse_args(
+        [subcmd, "-c", "conda-forge", "--use-local", "--override-channels", "gh"]
+    )
+    assert args.subcmd == subcmd
+    assert args.channel == ["conda-forge"]
+    assert args.use_local is True
+    assert args.override_channels is True
+
+
+@pytest.mark.parametrize("subcmd", ["install", "run"])
+def test_generate_parser_leaves_use_local_unset_by_default(subcmd):
+    parser = generate_parser()
+    args = parser.parse_args([subcmd, "gh"])
+    assert args.use_local is NULL
+
+
+def test_standalone_main_initializes_conda_context(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    old_search_path = context._search_path
+    old_argparse_args = context._argparse_args
+    condarc = tmp_path / "condarc"
+    condarc.write_text("channels:\n  - https://repo.anaconda.com/pkgs/main\n")
+    monkeypatch.setenv("CONDARC", str(condarc))
+
+    recorded: dict[str, tuple[str, ...]] = {}
+
+    def fake_execute(args):
+        recorded["channels"] = context.channels
+        return 0
+
+    monkeypatch.setattr("conda_global.cli.main.execute", fake_execute)
+
+    try:
+        from conda_global.__main__ import main
+
+        with pytest.raises(SystemExit) as exc_info:
+            main(["install", "-c", "conda-forge", "gh"])
+    finally:
+        reset_context(old_search_path, old_argparse_args)
+
+    assert exc_info.value.code == 0
+    assert recorded["channels"] == (
+        "conda-forge",
+        "https://repo.anaconda.com/pkgs/main",
+    )
 
 
 def test_execute_without_subcommand_prints_help(capsys):

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from types import SimpleNamespace
 
 import pytest
 
@@ -10,8 +11,16 @@ from conda_global.cli.run import execute_run
 from conda_global.exceptions import BinaryNotFoundError
 
 
-def _run_args(package="gh", channel=None, args=None):
-    return argparse.Namespace(package=package, channel=channel, args=args)
+def _run_args(
+    package="gh",
+    channel=None,
+    args=None,
+):
+    return argparse.Namespace(
+        package=package,
+        channel=channel,
+        args=args,
+    )
 
 
 @pytest.fixture
@@ -95,9 +104,53 @@ def test_run_custom_channel(
     fake_envs_create,
     rich_console,
     fake_subprocess,
+    monkeypatch,
 ):
+    monkeypatch.setattr(
+        "conda_global.cli.run.context",
+        SimpleNamespace(channels=["bioconda", "conda-forge"]),
+    )
+
     execute_run(
         _run_args(channel=["bioconda", "conda-forge"]),
         console=rich_console,
     )
     assert fake_envs_create[0]["channels"] == ["bioconda", "conda-forge"]
+
+
+def test_run_uses_configured_channels_when_omitted(
+    mock_conda_home,
+    fake_envs_create,
+    rich_console,
+    fake_subprocess,
+    monkeypatch,
+):
+    configured = ["https://repo.anaconda.com/pkgs/main"]
+    monkeypatch.setattr(
+        "conda_global.cli.run.context",
+        SimpleNamespace(channels=configured),
+    )
+
+    assert execute_run(_run_args(), console=rich_console) == 0
+    assert fake_envs_create[0]["channels"] == configured
+
+
+def test_run_uses_resolved_context_channels(
+    mock_conda_home,
+    fake_envs_create,
+    rich_console,
+    fake_subprocess,
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        "conda_global.cli.run.context",
+        SimpleNamespace(channels=["local", "bioconda"]),
+    )
+
+    result = execute_run(
+        _run_args(channel=["bioconda"]),
+        console=rich_console,
+    )
+
+    assert result == 0
+    assert fake_envs_create[0]["channels"] == ["local", "bioconda"]

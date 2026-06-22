@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from conda.base.constants import on_win
+from conda.base.context import context
 from conda_trampoline import TrampolineManager
 from rich.console import Console
 
@@ -29,7 +30,7 @@ def execute_install(
     console = console or Console(highlight=False)
     package = args.package
     env_name = args.environment or package
-    channels = args.channel or ["conda-forge"]
+    channels = list(context.channels)
     force = args.force
 
     envs = EnvironmentManager()

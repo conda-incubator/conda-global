@@ -51,7 +51,7 @@ class EnvironmentManager:
         prefix = self.envs_dir / name
         prefix.mkdir(parents=True, exist_ok=True)
 
-        channels = channels or ["conda-forge"]
+        channels = list(context.channels) if channels is None else list(channels)
         channel_objs = [Channel(c) for c in channels]
         specs = [MatchSpec(p) for p in packages]
 

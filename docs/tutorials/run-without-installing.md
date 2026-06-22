@@ -32,9 +32,9 @@ If you like it, install it permanently:
 $ conda global install bat
 ```
 
-## Use a specific channel
+## Use additional channels
 
-Pull the tool from a non-default channel:
+Search extra channels before your configured conda channels:
 
 ```bash
 $ conda global run -c bioconda samtools -- --version
@@ -45,6 +45,9 @@ Multiple `-c` flags are supported:
 ```bash
 $ conda global run -c nvidia -c conda-forge cuda-toolkit -- nvcc --version
 ```
+
+Add `--override-channels` if you want to search only the channels
+provided with `-c`.
 
 ## How it works
 

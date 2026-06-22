@@ -19,9 +19,9 @@ $ conda global install gh -e github-cli
 
 The environment lives in the data directory under `envs/github-cli/`.
 
-## Use a specific channel
+## Use additional channels
 
-Install a tool from a non-default channel:
+Search extra channels before your configured conda channels:
 
 ```bash
 $ conda global install cuda-toolkit -c nvidia -c conda-forge
@@ -30,6 +30,8 @@ $ conda global install cuda-toolkit -c nvidia -c conda-forge
 ```
 
 Channels are recorded in the manifest and used for future updates.
+Add `--override-channels` if you want to search only the channels
+provided with `-c`.
 
 ## Expose additional binaries
 
