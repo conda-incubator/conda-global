@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import stat
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from conda.base.constants import on_win
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from conda.common.path import BIN_DIRECTORY
+from conda.core.prefix_data import PrefixData
 
 
 def discover_binaries(prefix: Path) -> list[str]:
@@ -16,7 +15,7 @@ def discover_binaries(prefix: Path) -> list[str]:
 
     Looks in ``bin/`` on Unix or ``Scripts/`` on Windows.
     """
-    bin_dir = prefix / ("Scripts" if on_win else "bin")
+    bin_dir = prefix / BIN_DIRECTORY
     if not bin_dir.is_dir():
         return []
 
@@ -33,6 +32,33 @@ def discover_binaries(prefix: Path) -> list[str]:
     return binaries
 
 
+def discover_package_binaries(prefix: Path, package: str) -> list[str]:
+    """Return executable binary names owned by an installed package."""
+    record = PrefixData(prefix).get(package, None)
+    if record is None or not record.files:
+        return []
+
+    bin_path = Path(BIN_DIRECTORY)
+    binaries = []
+
+    for file in sorted(record.files):
+        path = Path(file)
+        if path.parent != bin_path:
+            continue
+
+        candidate = prefix / path
+        if not candidate.is_file():
+            continue
+
+        if on_win:
+            if candidate.suffix.lower() in (".exe", ".bat", ".cmd"):
+                binaries.append(candidate.stem)
+        elif _is_executable(candidate):
+            binaries.append(candidate.name)
+
+    return binaries
+
+
 def _is_executable(path: Path) -> bool:
     """Check if a file has the executable bit set."""
     return bool(path.stat().st_mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH))
@@ -40,7 +66,7 @@ def _is_executable(path: Path) -> bool:
 
 def find_binary(prefix: Path, name: str) -> Path | None:
     """Find a specific binary by name in a conda prefix."""
-    bin_dir = prefix / ("Scripts" if on_win else "bin")
+    bin_dir = prefix / BIN_DIRECTORY
     if not bin_dir.is_dir():
         return None
 

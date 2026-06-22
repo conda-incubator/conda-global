@@ -6,7 +6,7 @@ import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from conda.base.constants import on_win
+from conda.common.path import BIN_DIRECTORY
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -61,4 +61,4 @@ class ToolEnv:
 
     def bin_path(self, envs_dir: Path) -> Path:
         """Return the platform-correct binary directory within the prefix."""
-        return self.prefix_path(envs_dir) / ("Scripts" if on_win else "bin")
+        return self.prefix_path(envs_dir) / BIN_DIRECTORY

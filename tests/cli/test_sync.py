@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import stat
 
+from conda.common.path import BIN_DIRECTORY
+
 from conda_global.cli.sync import execute_sync
 
 
@@ -51,7 +53,7 @@ def test_sync_skips_existing_env(
     env_dir = mock_conda_home / "envs" / "gh"
     env_dir.mkdir(parents=True)
     (env_dir / "conda-meta").mkdir()
-    bin_dir = env_dir / "bin"
+    bin_dir = env_dir / BIN_DIRECTORY
     bin_dir.mkdir()
     binary = bin_dir / "gh"
     binary.write_bytes(b"#!/bin/sh\n")
