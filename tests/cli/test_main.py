@@ -10,6 +10,7 @@ from conda.base.context import context, reset_context
 from conda.common.constants import NULL
 
 from conda_global.cli.main import configure_parser, execute, generate_parser
+from conda_global.exceptions import CondaGlobalError
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -150,6 +151,29 @@ def test_execute_accepts_argv_tuple(monkeypatch):
 
     assert execute(("sync",)) == 7
     assert recorded[0].subcmd == "sync"
+
+
+def test_execute_renders_conda_global_errors(monkeypatch, capsys):
+    class FakeError(CondaGlobalError):
+        return_code = 24
+
+        def __init__(self) -> None:
+            self.error_message = "failed deliberately"
+            self.hints = ["try another command"]
+            super().__init__(self.error_message)
+
+    def fake(*args, **kwargs):
+        raise FakeError()
+
+    monkeypatch.setattr(context, "json", False)
+    monkeypatch.setattr("conda_global.cli.install.execute_install", fake)
+
+    assert execute(argparse.Namespace(subcmd="install")) == 24
+    output = capsys.readouterr().err
+    assert "Error:" in output
+    assert "failed deliberately" in output
+    assert "Hint:" in output
+    assert "try another command" in output
 
 
 @pytest.mark.parametrize(
