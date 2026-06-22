@@ -45,14 +45,17 @@ conda global install python -e py314 --expose python3.14 --expose pip=pip3.14
 Remove a tool, its environment, and all exposed trampolines.
 
 ```
-conda global uninstall -e <env>
+conda global uninstall <env>
 ```
 
+`env`
+: Environment to remove.
+
 `-e`, `--environment`
-: Environment to remove. Required.
+: Environment to remove. Supported as a compatibility alias.
 
 ```bash
-conda global uninstall -e ruff
+conda global uninstall ruff
 ```
 
 ---
@@ -296,4 +299,3 @@ conda global unpin -e <env>
 
 `-e`, `--environment`
 : Environment to unpin. Required.
-

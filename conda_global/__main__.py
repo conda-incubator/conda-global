@@ -4,7 +4,7 @@
 
     cg install gh
     cg list
-    cg uninstall -e gh
+    cg uninstall gh
 """
 
 from __future__ import annotations

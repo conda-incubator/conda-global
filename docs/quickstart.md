@@ -78,7 +78,7 @@ $ conda global run bat -- README.md
 $ conda global update
 
 # Remove a tool
-$ conda global uninstall -e gh
+$ conda global uninstall gh
 ```
 
 ## The `cg` shorthand

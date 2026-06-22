@@ -40,6 +40,15 @@ class BinaryNotFoundError(CondaGlobalError):
         super().__init__(self.error_message)
 
 
+class EnvironmentArgumentError(CondaGlobalError):
+    """Raised when an environment target is missing or ambiguous."""
+
+    def __init__(self, message: str) -> None:
+        self.error_message = message
+        self.hints = ["use 'conda global uninstall <env>' or 'conda global uninstall -e <env>'"]
+        super().__init__(self.error_message)
+
+
 class SolveError(CondaGlobalError):
     """Raised when dependency resolution fails for a tool environment."""
 
