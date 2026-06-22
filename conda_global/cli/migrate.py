@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 def execute_migrate(args: argparse.Namespace, *, console: Console | None = None) -> int:
     """Execute the ``conda global migrate`` subcommand.
 
-    Copies the manifest from ~/.cg/ to ~/.conda/global/, runs a fresh
+    Copies the manifest from ~/.cg/ to ~/.conda/global.toml, runs a fresh
     sync (reinstall of all tools), then removes the old directory.
     """
     if console is None:

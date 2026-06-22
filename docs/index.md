@@ -9,6 +9,16 @@ available on PATH via trampolines — no activation needed.
 conda package ecosystem: Python, R, Rust, C/C++, and anything else
 conda can install.
 
+Use conda-global for persistent tools you want on PATH. For one-off
+commands or scripts that should live in temporary or cached environments,
+use [conda-exec](https://github.com/conda-incubator/conda-exec), installed
+separately with `conda install -c conda-forge conda-exec`:
+
+```bash
+conda exec ruff check .
+conda exec script.py
+```
+
 ## Install
 
 ```bash

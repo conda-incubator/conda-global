@@ -49,7 +49,11 @@ Launcher
 
 One-off execution
 : pixi uses top-level `pixi exec` for temporary environments. The
-  conda equivalent is `conda exec`, not `conda global`.
+  conda equivalent is
+  [conda-exec](https://github.com/conda-incubator/conda-exec): install it
+  with `conda install -c conda-forge conda-exec`, then use
+  `conda exec <pkg>`. conda-global intentionally handles persistent tools,
+  not one-off execution.
 
 Extra commands
 : conda-global adds `pin`/`unpin`, `tree`, and `ensurepath` which

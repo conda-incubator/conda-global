@@ -88,6 +88,18 @@ cg install ruff        # same as: conda global install ruff
 cg list                # same as: conda global list
 ```
 
+## One-off commands
+
+Use conda-global when a tool should stay installed and available on PATH.
+For one-off commands or scripts, use
+[conda-exec](https://github.com/conda-incubator/conda-exec) instead,
+installed separately with `conda install -c conda-forge conda-exec`:
+
+```bash
+conda exec ruff check .
+conda exec script.py
+```
+
 ## Next steps
 
 - {doc}`tutorials/first-tool` — A deeper walkthrough with custom channels

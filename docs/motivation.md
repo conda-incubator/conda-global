@@ -36,6 +36,14 @@ conda-global exists for users who already rely on conda as their
 package manager and want tool management integrated into the conda
 CLI, using conda's solver, channel configuration, and authentication.
 
+### conda-exec
+
+[conda-exec](https://github.com/conda-incubator/conda-exec) covers the
+other side of the workflow: one-off commands and scripts. Use
+`conda exec TOOL ...` when you want an isolated temporary or cached
+environment for a single invocation. Use `conda global install TOOL`
+when you want a durable tool on PATH with a manifest entry.
+
 ## How conda-global fits in
 
 conda-global brings isolated tool management into conda itself:
