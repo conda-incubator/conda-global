@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from rich.console import Console
 
 from ..binaries import find_binary
+from ..channels import resolve_channels
 from ..envs import EnvironmentManager
 from ..exceptions import BinaryNotFoundError
 from . import status
@@ -25,7 +26,7 @@ def execute_run(
     """Run a tool from a temporary env without permanent install."""
     console = console or Console(highlight=False)
     package = args.package
-    channels = args.channel or ["conda-forge"]
+    channels = resolve_channels(args.channel)
     extra_args = args.args or []
 
     if extra_args and extra_args[0] == "--":

@@ -8,7 +8,7 @@ guide maps each brew command to its conda-global equivalent.
 | brew | conda-global | Notes |
 |------|-------------|-------|
 | `brew install <pkg>` | `conda global install <pkg>` | Installs into an isolated env, not system-wide |
-| `brew uninstall <pkg>` | `conda global uninstall -e <pkg>` | |
+| `brew uninstall <pkg>` | `conda global uninstall <pkg>` | |
 | `brew upgrade <pkg>` | `conda global update -e <pkg>` | |
 | `brew upgrade` | `conda global update` | Skips pinned tools |
 | `brew list` | `conda global list` | Also supports `--json` |

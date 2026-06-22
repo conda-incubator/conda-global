@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import stat
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from conda.base.constants import on_win
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from conda.common.path import BIN_DIRECTORY
+from conda.core.prefix_data import PrefixData
 
 
 def discover_binaries(prefix: Path) -> list[str]:
@@ -30,6 +29,33 @@ def discover_binaries(prefix: Path) -> list[str]:
         else:
             if _is_executable(entry):
                 binaries.append(entry.name)
+    return binaries
+
+
+def discover_package_binaries(prefix: Path, package: str) -> list[str]:
+    """Return executable binary names owned by an installed package."""
+    record = PrefixData(prefix).get(package, None)
+    if record is None or not record.files:
+        return []
+
+    bin_path = Path(BIN_DIRECTORY)
+    binaries = []
+
+    for file in sorted(record.files):
+        path = Path(file)
+        if path.parent != bin_path:
+            continue
+
+        candidate = prefix / path
+        if not candidate.is_file():
+            continue
+
+        if on_win:
+            if candidate.suffix.lower() in (".exe", ".bat", ".cmd"):
+                binaries.append(candidate.stem)
+        elif _is_executable(candidate):
+            binaries.append(candidate.name)
+
     return binaries
 
 

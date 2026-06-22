@@ -7,7 +7,7 @@ import sys
 
 import pytest
 
-from conda_global.binaries import discover_binaries, find_binary
+from conda_global.binaries import discover_binaries, discover_package_binaries, find_binary
 
 
 @pytest.fixture
@@ -47,6 +47,38 @@ def test_discover_binaries_no_bin_dir(tmp_path, monkeypatch):
     monkeypatch.setattr("conda_global.binaries.on_win", False)
     result = discover_binaries(tmp_path)
     assert result == []
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="chmod +x is a no-op on Windows")
+def test_discover_package_binaries_uses_package_files(unix_prefix, monkeypatch):
+    class FakeRecord:
+        files = [
+            "bin/http",
+            "bin/httpie",
+            "bin/https",
+            "bin/not-executable",
+            "lib/python.py",
+        ]
+
+    class FakePrefixData:
+        def __init__(self, prefix):
+            self.prefix = prefix
+
+        def get(self, package, default=None):
+            return FakeRecord()
+
+    bin_dir = unix_prefix / "bin"
+    for name in ("http", "httpie", "https"):
+        _make_executable(bin_dir / name)
+    (bin_dir / "not-executable").write_text("data")
+    _make_executable(bin_dir / "dependency-tool")
+    monkeypatch.setattr("conda_global.binaries.PrefixData", FakePrefixData)
+
+    assert discover_package_binaries(unix_prefix, "httpie") == [
+        "http",
+        "httpie",
+        "https",
+    ]
 
 
 @pytest.mark.parametrize(

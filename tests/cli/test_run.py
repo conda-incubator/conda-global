@@ -101,3 +101,20 @@ def test_run_custom_channel(
         console=rich_console,
     )
     assert fake_envs_create[0]["channels"] == ["bioconda", "conda-forge"]
+
+
+def test_run_uses_configured_channels_when_omitted(
+    mock_conda_home,
+    fake_envs_create,
+    rich_console,
+    fake_subprocess,
+    monkeypatch,
+):
+    configured = ["https://repo.anaconda.com/pkgs/main"]
+    monkeypatch.setattr(
+        "conda_global.cli.run.resolve_channels",
+        lambda channels: configured if channels is None else list(channels),
+    )
+
+    assert execute_run(_run_args(), console=rich_console) == 0
+    assert fake_envs_create[0]["channels"] == configured

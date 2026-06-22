@@ -8,7 +8,7 @@ each pipx command to its conda-global equivalent.
 | pipx | conda-global | Notes |
 |------|-------------|-------|
 | `pipx install <pkg>` | `conda global install <pkg>` | Works with any conda package, not just Python |
-| `pipx uninstall <pkg>` | `conda global uninstall -e <pkg>` | |
+| `pipx uninstall <pkg>` | `conda global uninstall <pkg>` | |
 | `pipx upgrade <pkg>` | `conda global update -e <pkg>` | |
 | `pipx upgrade-all` | `conda global update` | Skips pinned tools |
 | `pipx list` | `conda global list` | Also supports `--json` |

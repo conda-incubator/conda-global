@@ -16,6 +16,25 @@ def test_generate_parser_migrate_accept_force_flag():
     assert args.force is True
 
 
+@pytest.mark.parametrize(
+    ("argv", "environment_arg", "environment"),
+    [
+        (["uninstall", "httpie"], "httpie", None),
+        (["uninstall", "-e", "httpie"], None, "httpie"),
+    ],
+    ids=["positional", "flag"],
+)
+def test_generate_parser_uninstall_accepts_environment_forms(
+    argv,
+    environment_arg,
+    environment,
+):
+    args = generate_parser().parse_args(argv)
+    assert args.subcmd == "uninstall"
+    assert args.environment_arg == environment_arg
+    assert args.environment == environment
+
+
 def test_execute_without_subcommand_prints_help(capsys):
     args = argparse.Namespace(subcmd=None)
     assert execute(args) == 0

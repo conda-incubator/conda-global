@@ -35,7 +35,7 @@ conda global list
 conda global update
 
 # Remove a tool
-conda global uninstall -e gh
+conda global uninstall gh
 ```
 
 ## How it works
@@ -65,7 +65,7 @@ conda global ensurepath
 | Command | Description |
 |---|---|
 | `conda global install <pkg>` | Install a tool into an isolated environment |
-| `conda global uninstall -e <env>` | Remove a tool and its environment |
+| `conda global uninstall <env>` | Remove a tool and its environment |
 | `conda global add <pkg> -e <env>` | Add a dependency to an existing tool env |
 | `conda global remove <pkg> -e <env>` | Remove a dependency from a tool env |
 | `conda global list` | List installed tools |

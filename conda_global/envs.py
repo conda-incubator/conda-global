@@ -11,6 +11,7 @@ from conda.gateways.disk.delete import rm_rf
 from conda.models.channel import Channel
 from conda.models.match_spec import MatchSpec
 
+from .channels import resolve_channels
 from .exceptions import SolveError
 from .paths import global_envs_dir as _default_envs_dir
 
@@ -51,7 +52,7 @@ class EnvironmentManager:
         prefix = self.envs_dir / name
         prefix.mkdir(parents=True, exist_ok=True)
 
-        channels = channels or ["conda-forge"]
+        channels = resolve_channels(channels)
         channel_objs = [Channel(c) for c in channels]
         specs = [MatchSpec(p) for p in packages]
 
