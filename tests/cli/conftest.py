@@ -6,6 +6,7 @@ import shutil
 import stat
 
 import pytest
+from conda.common.path import BIN_DIRECTORY
 
 from conda_global.manifest import Manifest
 from conda_global.models import ToolEnv
@@ -32,7 +33,6 @@ def fake_envs_create(mock_conda_home, monkeypatch):
     for mod in (
         "conda.base.constants",
         "conda_global.binaries",
-        "conda_global.models",
         "conda_global.cli.install",
     ):
         monkeypatch.setattr(f"{mod}.on_win", False)
@@ -47,7 +47,7 @@ def fake_envs_create(mock_conda_home, monkeypatch):
         prefix = envs_dir / name
         prefix.mkdir(parents=True, exist_ok=True)
         (prefix / "conda-meta").mkdir(exist_ok=True)
-        bin_dir = prefix / "bin"
+        bin_dir = prefix / BIN_DIRECTORY
         bin_dir.mkdir(exist_ok=True)
         for pkg in packages:
             pkg_name = pkg.split(">")[0].split("<")[0].split("=")[0]

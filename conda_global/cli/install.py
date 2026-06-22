@@ -9,7 +9,7 @@ from conda.base.context import context
 from conda_trampoline import TrampolineManager
 from rich.console import Console
 
-from ..binaries import discover_binaries, find_binary
+from ..binaries import discover_binaries, discover_package_binaries, find_binary
 from ..envs import EnvironmentManager
 from ..exceptions import BinaryNotFoundError, ToolExistsError
 from ..manifest import Manifest
@@ -62,11 +62,15 @@ def execute_install(
             validate_name(binary_name, kind="binary")
             expose_mappings[exposed_name] = binary_name
     else:
-        available = discover_binaries(prefix)
-        if package in available:
-            expose_mappings[package] = package
-        elif available:
-            expose_mappings[available[0]] = available[0]
+        owned = discover_package_binaries(prefix, package)
+        if owned:
+            expose_mappings = {name: name for name in owned}
+        else:
+            available = discover_binaries(prefix)
+            if package in available:
+                expose_mappings[package] = package
+            elif available:
+                expose_mappings[available[0]] = available[0]
 
     tool = ToolEnv(
         name=env_name,

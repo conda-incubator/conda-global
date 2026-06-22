@@ -6,6 +6,7 @@ import argparse
 import stat
 
 import pytest
+from conda.common.path import BIN_DIRECTORY
 
 from conda_global.cli.expose import execute_expose, execute_hide
 from conda_global.exceptions import ToolNotFoundError
@@ -19,13 +20,12 @@ def tool_with_binary(mock_conda_home, monkeypatch):
     for mod in (
         "conda.base.constants",
         "conda_global.binaries",
-        "conda_global.models",
     ):
         monkeypatch.setattr(f"{mod}.on_win", False)
     monkeypatch.setattr("conda_trampoline._ON_WIN", False)
 
     env_dir = mock_conda_home / "envs" / "ruff"
-    bin_dir = env_dir / "bin"
+    bin_dir = env_dir / BIN_DIRECTORY
     bin_dir.mkdir(parents=True)
     binary = bin_dir / "ruff"
     binary.write_bytes(b"#!/bin/sh\n")
