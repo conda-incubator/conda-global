@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from types import SimpleNamespace
 
 import pytest
 
@@ -72,7 +73,13 @@ def test_install_custom_channel(
     mock_trampoline,
     fake_envs_create,
     rich_console,
+    monkeypatch,
 ):
+    monkeypatch.setattr(
+        "conda_global.cli.install.context",
+        SimpleNamespace(channels=["nvidia", "conda-forge"]),
+    )
+
     result = execute_install(
         _install_args(channel=["nvidia", "conda-forge"]),
         console=rich_console,
@@ -81,6 +88,48 @@ def test_install_custom_channel(
 
     tools = Manifest(mock_conda_home / "manifest.toml").load()
     assert tools["gh"].channels == ["nvidia", "conda-forge"]
+
+
+def test_install_uses_configured_channels_when_omitted(
+    mock_conda_home,
+    mock_trampoline,
+    fake_envs_create,
+    rich_console,
+    monkeypatch,
+):
+    configured = ["https://repo.anaconda.com/pkgs/main"]
+    monkeypatch.setattr(
+        "conda_global.cli.install.context",
+        SimpleNamespace(channels=configured),
+    )
+
+    result = execute_install(_install_args(), console=rich_console)
+
+    assert result == 0
+    assert fake_envs_create[0]["channels"] == configured
+    tools = Manifest(mock_conda_home / "manifest.toml").load()
+    assert tools["gh"].channels == configured
+
+
+def test_install_uses_resolved_context_channels(
+    mock_conda_home,
+    mock_trampoline,
+    fake_envs_create,
+    rich_console,
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        "conda_global.cli.install.context",
+        SimpleNamespace(channels=["local", "nvidia"]),
+    )
+
+    result = execute_install(
+        _install_args(channel=["nvidia"]),
+        console=rich_console,
+    )
+
+    assert result == 0
+    assert fake_envs_create[0]["channels"] == ["local", "nvidia"]
 
 
 @pytest.mark.parametrize(

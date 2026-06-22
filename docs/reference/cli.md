@@ -8,7 +8,7 @@ alias is also provided for convenience.
 Install a tool into an isolated environment.
 
 ```
-conda global install <package> [-e <env>] [-c <channel>...] [--expose <mapping>...] [--force]
+conda global install <package> [-e <env>] [-c <channel>...] [--override-channels] [--use-local] [--expose <mapping>...] [--force]
 ```
 
 `package`
@@ -18,7 +18,13 @@ conda global install <package> [-e <env>] [-c <channel>...] [--expose <mapping>.
 : Environment name. Defaults to the package name.
 
 `-c`, `--channel`
-: Channel to search. Repeatable. Defaults to conda-forge.
+: Additional channel to search before configured channels. Repeatable.
+
+`--override-channels`
+: Only search channels passed with `-c` and skip configured channels.
+
+`--use-local`
+: Use locally built packages, equivalent to adding `-c local`.
 
 `--expose`
 : Expose mapping as `name=binary` or just `name`. Repeatable.
@@ -207,14 +213,20 @@ Run a tool from a temporary environment without installing it
 permanently.
 
 ```
-conda global run <package> [-c <channel>...] [-- <args>...]
+conda global run <package> [-c <channel>...] [--override-channels] [--use-local] [-- <args>...]
 ```
 
 `package`
 : Package to run.
 
 `-c`, `--channel`
-: Channel to search. Repeatable.
+: Additional channel to search before configured channels. Repeatable.
+
+`--override-channels`
+: Only search channels passed with `-c` and skip configured channels.
+
+`--use-local`
+: Use locally built packages, equivalent to adding `-c local`.
 
 `args`
 : Arguments passed to the tool. Use `--` to separate from
@@ -222,7 +234,7 @@ conda global run <package> [-c <channel>...] [-- <args>...]
 
 ```bash
 conda global run cowsay -- "hello from conda"
-conda global run bat -c conda-forge -- README.md
+conda global run -c conda-forge bat -- README.md
 ```
 
 ---

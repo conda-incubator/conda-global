@@ -6,6 +6,7 @@ import subprocess
 import sys
 from typing import TYPE_CHECKING
 
+from conda.base.context import context
 from rich.console import Console
 
 from ..binaries import find_binary
@@ -25,7 +26,7 @@ def execute_run(
     """Run a tool from a temporary env without permanent install."""
     console = console or Console(highlight=False)
     package = args.package
-    channels = args.channel or ["conda-forge"]
+    channels = list(context.channels)
     extra_args = args.args or []
 
     if extra_args and extra_args[0] == "--":

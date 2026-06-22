@@ -12,12 +12,15 @@ from __future__ import annotations
 
 def main(args: list[str] | None = None) -> None:
     """Entry point for the ``cg`` console script."""
+    from conda.base.context import context
+
     from .cli.main import execute, generate_parser
 
     parser = generate_parser()
     parser.prog = "cg"
 
     parsed = parser.parse_args(args)
+    context.__init__(argparse_args=parsed)
     raise SystemExit(execute(parsed))
 
 

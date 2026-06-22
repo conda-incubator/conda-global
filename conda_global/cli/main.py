@@ -7,6 +7,8 @@ import argparse
 
 def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.ArgumentParser:
     """Build the argument parser for ``conda global``."""
+    from conda.cli.helpers import add_parser_channels
+
     if parser is None:
         parser = argparse.ArgumentParser(
             prog="conda global",
@@ -23,13 +25,7 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
         default=None,
         help="Environment name (defaults to package name)",
     )
-    p_install.add_argument(
-        "-c",
-        "--channel",
-        action="append",
-        default=None,
-        help="Channel to search (repeatable)",
-    )
+    add_parser_channels(p_install)
     p_install.add_argument(
         "--expose",
         action="append",
@@ -108,13 +104,7 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
 
     p_run = sub.add_parser("run", help="Run a tool without permanent install")
     p_run.add_argument("package", help="Package to run")
-    p_run.add_argument(
-        "-c",
-        "--channel",
-        action="append",
-        default=None,
-        help="Channel to search (repeatable)",
-    )
+    add_parser_channels(p_run)
     p_run.add_argument("args", nargs=argparse.REMAINDER, help="Arguments to pass")
 
     p_tree = sub.add_parser("tree", help="Show dependency tree")

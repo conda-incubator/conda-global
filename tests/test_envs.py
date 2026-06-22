@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import pytest
 
 from conda_global.envs import EnvironmentManager
@@ -40,3 +42,45 @@ def test_remove(tmp_path):
 
 def test_remove_nonexistent(tmp_path):
     EnvironmentManager(tmp_path).remove("nonexistent")
+
+
+def test_create_uses_configured_channels_when_omitted(tmp_path, monkeypatch):
+    received: dict[str, object] = {}
+
+    class FakeTransaction:
+        def download_and_extract(self):
+            received["downloaded"] = True
+
+        def execute(self):
+            received["executed"] = True
+
+    class FakeSolver:
+        def __init__(self, prefix, channels, subdirs, *, specs_to_add):
+            received["prefix"] = prefix
+            received["channels"] = channels
+            received["subdirs"] = subdirs
+            received["specs"] = specs_to_add
+
+        def solve_for_transaction(self):
+            return FakeTransaction()
+
+    monkeypatch.setattr("conda_global.envs.Channel", lambda channel: channel)
+    monkeypatch.setattr("conda_global.envs.MatchSpec", lambda package: package)
+    monkeypatch.setattr(
+        "conda_global.envs.context",
+        SimpleNamespace(
+            channels=["https://repo.anaconda.com/pkgs/main"],
+            plugin_manager=SimpleNamespace(
+                get_cached_solver_backend=lambda: FakeSolver,
+            ),
+            subdirs=["osx-arm64"],
+        ),
+    )
+
+    prefix = EnvironmentManager(tmp_path).create("gh", ["gh"])
+
+    assert prefix == tmp_path / "gh"
+    assert received["channels"] == ["https://repo.anaconda.com/pkgs/main"]
+    assert received["specs"] == ["gh"]
+    assert received["downloaded"] is True
+    assert received["executed"] is True
