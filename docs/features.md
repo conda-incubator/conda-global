@@ -94,20 +94,6 @@ pinned = true
 
 See {doc}`configuration` for the full manifest reference.
 
-## Temporary execution
-
-![Run tools without installing](../demos/run.gif)
-
-`conda global run` creates a disposable environment, runs a command,
-and removes the environment:
-
-```bash
-conda global run cowsay -- "hello"
-```
-
-This is useful for one-off commands or trying out a tool before
-committing to a permanent install.
-
 ## Pinning
 
 ![Pin, update, and unpin](../demos/pin-update.gif)

@@ -12,7 +12,7 @@ each pipx command to its conda-global equivalent.
 | `pipx upgrade <pkg>` | `conda global update -e <pkg>` | |
 | `pipx upgrade-all` | `conda global update` | Skips pinned tools |
 | `pipx list` | `conda global list` | Also supports `--json` |
-| `pipx run <pkg>` | `conda global run <pkg>` | Creates a temp env, cleans up after |
+| `pipx run <pkg>` | `conda exec <pkg>` | One-off execution lives in conda-exec |
 | `pipx inject <pkg> <dep>` | `conda global add <dep> -e <pkg>` | |
 | `pipx uninject <pkg> <dep>` | `conda global remove <dep> -e <pkg>` | |
 | `pipx ensurepath` | `conda global ensurepath` | Same concept |
@@ -29,6 +29,10 @@ each pipx command to its conda-global equivalent.
 Package ecosystem
 : pipx installs Python packages from PyPI. conda-global installs
   packages from conda channels — Python, R, Rust, C/C++, and more.
+
+One-off execution
+: `pipx run` maps to `conda exec`, which creates isolated conda
+  environments for one-off commands without making them global tools.
 
 Isolation mechanism
 : pipx creates virtualenvs. conda-global creates full conda

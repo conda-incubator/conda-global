@@ -15,7 +15,6 @@ guide maps each brew command to its conda-global equivalent.
 | `brew pin <pkg>` | `conda global pin -e <pkg>` | Prevents upgrades |
 | `brew unpin <pkg>` | `conda global unpin -e <pkg>` | |
 | `brew deps <pkg>` | `conda global tree -e <pkg>` | Shows full dependency tree |
-| — | `conda global run <pkg>` | Run without permanent install |
 | — | `conda global sync` | Reconcile filesystem with manifest |
 | — | `conda global edit` | Open manifest in editor |
 

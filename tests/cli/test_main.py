@@ -10,6 +10,7 @@ from conda.base.context import context, reset_context
 from conda.common.constants import NULL
 
 from conda_global.cli.main import configure_parser, execute, generate_parser
+from conda_global.exceptions import CondaGlobalError
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -51,22 +52,20 @@ def test_generate_parser_uninstall_accepts_environment_forms(
     assert args.environment == environment
 
 
-@pytest.mark.parametrize("subcmd", ["install", "run"])
-def test_generate_parser_accepts_channel_customization(subcmd):
+def test_generate_parser_accepts_channel_customization():
     parser = generate_parser()
     args = parser.parse_args(
-        [subcmd, "-c", "conda-forge", "--use-local", "--override-channels", "gh"]
+        ["install", "-c", "conda-forge", "--use-local", "--override-channels", "gh"]
     )
-    assert args.subcmd == subcmd
+    assert args.subcmd == "install"
     assert args.channel == ["conda-forge"]
     assert args.use_local is True
     assert args.override_channels is True
 
 
-@pytest.mark.parametrize("subcmd", ["install", "run"])
-def test_generate_parser_leaves_use_local_unset_by_default(subcmd):
+def test_generate_parser_leaves_use_local_unset_by_default():
     parser = generate_parser()
-    args = parser.parse_args([subcmd, "gh"])
+    args = parser.parse_args(["install", "gh"])
     assert args.use_local is NULL
 
 
@@ -154,6 +153,29 @@ def test_execute_accepts_argv_tuple(monkeypatch):
     assert recorded[0].subcmd == "sync"
 
 
+def test_execute_renders_conda_global_errors(monkeypatch, capsys):
+    class FakeError(CondaGlobalError):
+        return_code = 24
+
+        def __init__(self) -> None:
+            self.error_message = "failed deliberately"
+            self.hints = ["try another command"]
+            super().__init__(self.error_message)
+
+    def fake(*args, **kwargs):
+        raise FakeError()
+
+    monkeypatch.setattr(context, "json", False)
+    monkeypatch.setattr("conda_global.cli.install.execute_install", fake)
+
+    assert execute(argparse.Namespace(subcmd="install")) == 24
+    output = capsys.readouterr().err
+    assert "Error:" in output
+    assert "failed deliberately" in output
+    assert "Hint:" in output
+    assert "try another command" in output
+
+
 @pytest.mark.parametrize(
     "subcmd,target",
     [
@@ -165,7 +187,6 @@ def test_execute_accepts_argv_tuple(monkeypatch):
         ("update", "conda_global.cli.update.execute_update"),
         ("expose", "conda_global.cli.expose.execute_expose"),
         ("hide", "conda_global.cli.expose.execute_hide"),
-        ("run", "conda_global.cli.run.execute_run"),
         ("tree", "conda_global.cli.tree.execute_tree"),
         ("edit", "conda_global.cli.edit.execute_edit"),
         ("ensurepath", "conda_global.cli.ensurepath.execute_ensurepath"),

@@ -70,17 +70,6 @@ To remove it:
 conda global hide black -e black
 ```
 
-## Run without installing
-
-Use `conda global run` to execute a tool from a temporary environment:
-
-```bash
-conda global run cowsay -- "hello from conda"
-```
-
-The environment is created, the command runs, and the environment is
-removed — nothing persists.
-
 ## Inspect a tool
 
 ![View the dependency tree, add a package, see it grow](../../demos/tree.gif)

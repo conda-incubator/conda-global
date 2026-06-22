@@ -74,7 +74,6 @@ conda global ensurepath
 | `conda global sync` | Reconcile filesystem with manifest |
 | `conda global expose <name>=<bin> -e <env>` | Expose a binary on PATH |
 | `conda global hide <name> -e <env>` | Remove a binary from PATH |
-| `conda global run <pkg> [-- <args>]` | Run a tool without installing |
 | `conda global tree -e <env>` | Show dependency tree |
 | `conda global pin -e <env>` | Prevent upgrades |
 | `conda global unpin -e <env>` | Allow upgrades |

@@ -21,7 +21,7 @@
 
 ### Changed
 
-- Install, run, and environment creation now use the channels from conda
+- Install and environment creation now use the channels from conda
   configuration when no channel is provided on the command line or in the
   manifest. Explicit `-c/--channel` values are searched before configured
   channels, and `--override-channels` keeps the solve limited to explicitly
@@ -30,6 +30,11 @@
   the solver inputs used for the initial install. (#20)
 - Documentation now compares conda-global with conda-exec and clarifies the
   new default data paths. (#14)
+
+### Removed
+
+- Removed `conda global run`. Use `conda exec` for one-off execution
+  from temporary or cached conda environments.
 
 ### Security
 

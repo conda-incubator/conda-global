@@ -75,11 +75,7 @@ def fake_envs_create(mock_conda_home, monkeypatch):
 
 @pytest.fixture
 def fake_subprocess_run(monkeypatch):
-    """Patch subprocess.run in a target module and return (recorded, set_rc).
-
-    By default patches ``conda_global.cli.run.subprocess.run``. Use
-    ``request.param`` to override the target module path.
-    """
+    """Return a fake subprocess.run implementation and captured calls."""
     recorded: list[list[str]] = []
     rc = [0]
 
