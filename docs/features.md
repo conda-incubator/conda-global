@@ -60,8 +60,9 @@ Each exposed binary has a JSON config:
 
 ![Expose and hide binaries](../demos/expose-hide.gif)
 
-By default, `conda global install <pkg>` exposes the binary matching
-the package name. You can control this with `--expose`:
+By default, `conda global install <pkg>` exposes executables that conda
+package metadata marks as package-owned. You can control this with
+`--expose`:
 
 ```bash
 # Expose a specific binary

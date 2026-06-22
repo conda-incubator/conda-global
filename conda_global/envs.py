@@ -55,7 +55,7 @@ class EnvironmentManager:
         channel_objs = [Channel(c) for c in channels]
         specs = [MatchSpec(p) for p in packages]
 
-        solver_backend = context.plugin_manager.get_cached_solver_backend()
+        solver_backend = context.plugin_manager.get_cached_solver_backend(None)
         if solver_backend is None:
             raise SolveError(name, "no solver backend found")
 

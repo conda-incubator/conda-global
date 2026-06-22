@@ -9,7 +9,7 @@ import pytest
 from conda.base.context import context, reset_context
 from conda.common.constants import NULL
 
-from conda_global.cli.main import execute, generate_parser
+from conda_global.cli.main import configure_parser, execute, generate_parser
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -20,6 +20,16 @@ def test_generate_parser_migrate_accept_force_flag():
     args = parser.parse_args(["migrate", "--force"])
     assert args.subcmd == "migrate"
     assert args.force is True
+
+
+def test_configure_parser_uses_existing_parser():
+    parser = argparse.ArgumentParser(prog="conda global")
+    configure_parser(parser)
+
+    args = parser.parse_args(["install", "gh"])
+
+    assert args.subcmd == "install"
+    assert args.package == "gh"
 
 
 @pytest.mark.parametrize(
@@ -129,6 +139,19 @@ def test_execute_routes_sync(monkeypatch):
 
     monkeypatch.setattr("conda_global.cli.sync.execute_sync", fake)
     assert execute(args) == 7
+
+
+def test_execute_accepts_argv_tuple(monkeypatch):
+    recorded: list[argparse.Namespace] = []
+
+    def fake(ns, **kwargs):
+        recorded.append(ns)
+        return 7
+
+    monkeypatch.setattr("conda_global.cli.sync.execute_sync", fake)
+
+    assert execute(("sync",)) == 7
+    assert recorded[0].subcmd == "sync"
 
 
 @pytest.mark.parametrize(

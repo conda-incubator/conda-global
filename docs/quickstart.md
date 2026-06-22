@@ -39,7 +39,7 @@ $ conda global install gh
   Installing tool gh...
   Installed tool gh
   Commands now available:
-    gh    → ~/.cg/bin/gh
+    gh    → ~/.conda/global/bin/gh
 ```
 
 That's it. The `gh` command is now available from anywhere:

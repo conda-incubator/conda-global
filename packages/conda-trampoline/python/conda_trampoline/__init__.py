@@ -23,7 +23,7 @@ class TrampolineManager:
 
     Usage::
 
-        trampolines = TrampolineManager(Path("~/.cg/bin"))
+        trampolines = TrampolineManager(Path("~/.conda/global/bin"))
         trampolines.deploy("gh", exe_path, "/path/to/bin")
         trampolines.remove("gh")
     """

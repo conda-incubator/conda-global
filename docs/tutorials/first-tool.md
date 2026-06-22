@@ -14,7 +14,7 @@ $ conda global install gh -e github-cli
   Installing tool github-cli...
   Installed tool github-cli
   Commands now available:
-    gh    → ~/.cg/bin/gh
+    gh    → ~/.conda/global/bin/gh
 ```
 
 The environment lives in the data directory under `envs/github-cli/`.
@@ -35,17 +35,17 @@ provided with `-c`.
 
 ## Expose additional binaries
 
-Some packages ship multiple executables. By default, conda-global
-exposes the one matching the package name. Use `--expose` to control
-this:
+Some packages ship multiple executables. By default, conda-global exposes
+the executables that conda package metadata marks as package-owned. Use
+`--expose` to control this explicitly:
 
 ```bash
 $ conda global install python -e py314 --expose python3.14 --expose pip=pip3.14
   Installing tool py314...
   Installed tool py314
   Commands now available:
-    python3.14    → ~/.cg/bin/python3.14
-    pip           → ~/.cg/bin/pip
+    python3.14    → ~/.conda/global/bin/python3.14
+    pip           → ~/.conda/global/bin/pip
 ```
 
 The `pip=pip3.14` syntax means: expose the binary `pip3.14` from

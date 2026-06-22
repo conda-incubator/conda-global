@@ -149,6 +149,11 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
     return parser
 
 
+def configure_parser(parser: argparse.ArgumentParser) -> None:
+    """Configure the parser supplied by conda's plugin manager."""
+    generate_parser(parser)
+
+
 def _handle_error(exc: Exception) -> int:
     """Render an error with Rich and return its exit code."""
     from conda.base.context import context as conda_context
@@ -165,9 +170,12 @@ def _handle_error(exc: Exception) -> int:
     return getattr(exc, "return_code", 1)
 
 
-def execute(args: argparse.Namespace) -> int:
+def execute(args: argparse.Namespace | tuple[str]) -> int:
     """Dispatch to the appropriate subcommand handler."""
     from ..exceptions import CondaGlobalError
+
+    if isinstance(args, tuple):
+        args = generate_parser().parse_args([str(arg) for arg in args])
 
     subcmd = getattr(args, "subcmd", None)
     if not subcmd:

@@ -33,7 +33,7 @@ $ conda global install ruff
   Installing tool ruff...
   Installed tool ruff
   Commands now available:
-    ruff    → ~/.cg/bin/ruff
+    ruff    → ~/.conda/global/bin/ruff
 
 $ ruff --version
 ruff 0.11.6

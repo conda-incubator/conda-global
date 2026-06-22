@@ -12,7 +12,7 @@ installed CLI tools **without** activating a conda environment every time.
 - Each exposed tool is typically a **hardlink** (or copy) to that single
   binary. The trampoline picks the config file from its **own filename**:
   config lives next to the links under a `trampoline/` directory (see
-  conda-global’s layout under `~/.cg/bin`).
+  conda-global’s layout under `~/.conda/global/bin`).
 
 Config shape (simplified):
 
@@ -35,7 +35,7 @@ end users directly.
 from pathlib import Path
 from conda_trampoline import TrampolineManager
 
-tm = TrampolineManager(Path("~/.cg/bin").expanduser())
+tm = TrampolineManager(Path("~/.conda/global/bin").expanduser())
 # deploy/remove are normally driven by conda global …
 ```
 

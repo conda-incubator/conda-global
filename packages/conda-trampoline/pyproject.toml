@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "conda-trampoline"
-version = "0.1.1"
+version = "0.2.0"
 description = "Trampoline binary for conda — launches tools from isolated conda environments"
 requires-python = ">=3.10"
 readme = "README.md"

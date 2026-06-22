@@ -2,16 +2,25 @@
 
 from __future__ import annotations
 
-from conda.plugins import CondaSubcommand, hookimpl
+from typing import TYPE_CHECKING
+
+from conda.plugins import hookimpl
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from conda.plugins.types import CondaSubcommand
 
 
 @hookimpl
-def conda_subcommands():
-    from .cli.main import execute, generate_parser
+def conda_subcommands() -> Iterable[CondaSubcommand]:
+    from conda.plugins.types import CondaSubcommand
+
+    from .cli.main import configure_parser, execute
 
     yield CondaSubcommand(
         name="global",
         summary="Install and manage globally available CLI tools.",
         action=execute,
-        configure_parser=generate_parser,
+        configure_parser=configure_parser,
     )
