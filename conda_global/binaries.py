@@ -35,13 +35,14 @@ def discover_binaries(prefix: Path) -> list[str]:
 def discover_package_binaries(prefix: Path, package: str) -> list[str]:
     """Return executable binary names owned by an installed package."""
     record = PrefixData(prefix).get(package, None)
-    if record is None or not record.files:
+    files = getattr(record, "files", None)
+    if not files:
         return []
 
     bin_path = Path(BIN_DIRECTORY)
     binaries = []
 
-    for file in sorted(record.files):
+    for file in sorted(files):
         path = Path(file)
         if path.parent != bin_path:
             continue

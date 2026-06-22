@@ -45,8 +45,9 @@ binary (provided by the [`conda-trampoline`](https://pypi.org/project/conda-tram
 package) acts as a launcher — it reads a JSON config, sets up the environment,
 and launches the real binary with zero activation overhead.
 
-All data lives under `~/.cg/` (`%USERPROFILE%\.cg` on Windows).
-See the [docs](https://conda-incubator.github.io/conda-global/) for details.
+The manifest lives at `~/.conda/global.toml`; environments and trampolines
+live under `~/.conda/global/`. See the
+[docs](https://conda-incubator.github.io/conda-global/) for details.
 
 ## Installation
 

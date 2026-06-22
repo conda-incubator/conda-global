@@ -71,7 +71,7 @@ def test_create_uses_configured_channels_when_omitted(tmp_path, monkeypatch):
         SimpleNamespace(
             channels=["https://repo.anaconda.com/pkgs/main"],
             plugin_manager=SimpleNamespace(
-                get_cached_solver_backend=lambda: FakeSolver,
+                get_cached_solver_backend=lambda name=None: FakeSolver,
             ),
             subdirs=["osx-arm64"],
         ),

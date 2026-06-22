@@ -1,17 +1,48 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (2026-06-22)
 
-### Changed
+### Added
 
 - Default data directory for new installs moved from `~/.cg/` to
   `~/.conda/global/`. Existing installs continue using `~/.cg/`
-  until explicitly migrated. (#8)
+  until explicitly migrated. (#9)
 - Manifest moved from inside the data directory to `~/.conda/global.toml`,
   a flat file alongside the data directory for easy discoverability.
 - New `conda global migrate` subcommand performs a reinstall-based
   migration from `~/.cg/` to the new layout. Copies the manifest,
   runs a fresh `sync`, then removes the old directory.
+- `conda global uninstall <env>` is now the primary uninstall form.
+  The previous `conda global uninstall -e <env>` form remains supported,
+  and conflicting positional/flag targets are rejected. (#21)
+- Package-owned executables are exposed on install when conda package
+  metadata lists them, so packages such as `httpie` expose `http`,
+  `httpie`, and `https` by default. (#22)
+
+### Changed
+
+- Install, run, and environment creation now use the channels from conda
+  configuration when no channel is provided on the command line or in the
+  manifest. Explicit `-c/--channel` values are searched before configured
+  channels, and `--override-channels` keeps the solve limited to explicitly
+  supplied channels. (#20)
+- New installs persist the resolved channel list in `global.toml`, matching
+  the solver inputs used for the initial install. (#20)
+- Documentation now compares conda-global with conda-exec and clarifies the
+  new default data paths. (#14)
+
+### Security
+
+- Environment and binary names are validated before filesystem access to
+  reject path traversal and invalid tool names. (#10)
+
+### Packaging and CI
+
+- Bump `conda-trampoline`, the split conda recipe, and release metadata to
+  `0.2.0`.
+- Test every supported Python version, 3.10 through 3.14, across Ubuntu,
+  macOS, and Windows. (#23)
+- Update GitHub Actions dependencies, including Codecov v7. (#13, #15)
 
 ## 0.1.1 (2026-04-01)
 

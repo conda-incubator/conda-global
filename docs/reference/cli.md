@@ -28,7 +28,7 @@ conda global install <package> [-e <env>] [-c <channel>...] [--override-channels
 
 `--expose`
 : Expose mapping as `name=binary` or just `name`. Repeatable.
-  Defaults to exposing the binary matching the package name.
+  Defaults to package-owned executables reported by conda metadata.
 
 `--force`
 : Force reinstall if the tool already exists.
