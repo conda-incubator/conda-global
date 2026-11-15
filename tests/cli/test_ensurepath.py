@@ -28,9 +28,9 @@ def test_ensurepath(
     expected_rc,
     expected_text,
 ):
-    monkeypatch.setattr("userpath.in_current_path", lambda _: in_path)
-    monkeypatch.setattr("userpath.need_shell_restart", lambda _: needs_restart)
-    monkeypatch.setattr("userpath.append", lambda loc, app: append_ok)
+    monkeypatch.setattr("userpath.in_current_path", lambda _, **__: in_path)
+    monkeypatch.setattr("userpath.need_shell_restart", lambda _, **__: needs_restart)
+    monkeypatch.setattr("userpath.append", lambda loc, app, **__: append_ok)
 
     result = execute_ensurepath(argparse.Namespace(), console=rich_console)
     assert result == expected_rc
