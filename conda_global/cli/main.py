@@ -112,7 +112,14 @@ def generate_parser(parser: argparse.ArgumentParser | None = None) -> argparse.A
 
     sub.add_parser("edit", help="Open global.toml in $EDITOR")
 
-    sub.add_parser("ensurepath", help="Add the global bin directory to PATH")
+    p_ensurepath = sub.add_parser("ensurepath", help="Add the global bin directory to PATH")
+    p_ensurepath.add_argument(
+        "--shell",
+        action="append",
+        default=None,
+        choices=["bash", "zsh", "fish", "xonsh", "sh"],
+        help="Shell(s) to configure (repeatable). Default: auto-detect (Unix only).",
+    )
 
     p_pin = sub.add_parser("pin", help="Prevent a tool from being upgraded")
     p_pin.add_argument(
