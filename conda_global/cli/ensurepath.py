@@ -15,33 +15,6 @@ if TYPE_CHECKING:
     import argparse
 
 
-def _detect_shells(args: argparse.Namespace) -> list[str] | None:
-    """Detect which shells to configure."""
-    if getattr(args, "shell", None):
-        return args.shell
-
-    shells = []
-
-    if os.environ.get("FISH_VERSION") or Path("~/.config/fish/config.fish").expanduser().exists():
-        shells.append("fish")
-
-    if os.environ.get("ZSH_VERSION") or Path("~/.zshrc").expanduser().exists():
-        shells.append("zsh")
-
-    bashrc = Path("~/.bashrc").expanduser().exists()
-    bash_profile = Path("~/.bash_profile").expanduser().exists()
-    if os.environ.get("BASH_VERSION") or bashrc or bash_profile:
-        shells.append("bash")
-
-    if os.environ.get("XONSH_VERSION") or Path("~/.xonshrc").expanduser().exists():
-        shells.append("xonsh")
-
-    if not shells:
-        shells = ["bash"]
-
-    return shells
-
-
 def execute_ensurepath(
     args: argparse.Namespace,
     *,
@@ -50,7 +23,26 @@ def execute_ensurepath(
     """Add the global binary directory to PATH."""
     console = console or Console(highlight=False)
     location = str(global_bin_dir())
-    shells = _detect_shells(args)
+
+    if getattr(args, "shell", None):
+        shells = args.shell
+    else:
+        shells = []
+        fish_config = Path("~/.config/fish/config.fish").expanduser().exists()
+        if os.environ.get("FISH_VERSION") or fish_config:
+            shells.append("fish")
+        zshrc = Path("~/.zshrc").expanduser().exists()
+        if os.environ.get("ZSH_VERSION") or zshrc:
+            shells.append("zsh")
+        bashrc = Path("~/.bashrc").expanduser().exists()
+        bash_profile = Path("~/.bash_profile").expanduser().exists()
+        if os.environ.get("BASH_VERSION") or bashrc or bash_profile:
+            shells.append("bash")
+        xonshrc = Path("~/.xonshrc").expanduser().exists()
+        if os.environ.get("XONSH_VERSION") or xonshrc:
+            shells.append("xonsh")
+        if not shells:
+            shells = ["bash"]
 
     if userpath.in_current_path(location):
         console.print(f"[bold]{location}[/bold] is already on your PATH.")
